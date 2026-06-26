@@ -7,15 +7,15 @@ public class FitCoachDbContext : DbContext
 {
     public FitCoachDbContext(DbContextOptions<FitCoachDbContext> options) : base(options) { }
 
-    public DbSet<User> Users => Set<User>();
-    public DbSet<TrainerProfile> TrainerProfiles => Set<TrainerProfile>();
-    public DbSet<StudentProfile> StudentProfiles => Set<StudentProfile>();
-    public DbSet<Exercise> Exercises => Set<Exercise>();
-    public DbSet<WorkoutPlan> WorkoutPlans => Set<WorkoutPlan>();
-    public DbSet<WorkoutDay> WorkoutDays => Set<WorkoutDay>();
-    public DbSet<PlanExercise> PlanExercises => Set<PlanExercise>();
-    public DbSet<WorkoutSession> WorkoutSessions => Set<WorkoutSession>();
-    public DbSet<SessionSet> SessionSets => Set<SessionSet>();
+    public DbSet<User> Users { get; set; }
+    public DbSet<TrainerProfile> TrainerProfiles { get; set; }
+    public DbSet<StudentProfile> StudentProfiles { get; set; }
+    public DbSet<Exercise> Exercises { get; set; }
+    public DbSet<WorkoutPlan> WorkoutPlans { get; set; }
+    public DbSet<WorkoutDay> WorkoutDays { get; set; }
+    public DbSet<PlanExercise> PlanExercises { get; set; }
+    public DbSet<WorkoutSession> WorkoutSessions { get; set; }
+    public DbSet<SessionSet> SessionSets { get; set; }
 
     protected override void OnModelCreating(ModelBuilder mb)
     {

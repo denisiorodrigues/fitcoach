@@ -1,5 +1,8 @@
 using FitCoach.API.Data;
-using FitCoach.API.DTOs;
+using FitCoach.API.DTOs.Auth;
+using FitCoach.API.DTOs.Exercise;
+using FitCoach.API.DTOs.Student;
+using FitCoach.API.DTOs.Workout;
 using FitCoach.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -95,8 +98,7 @@ public class WorkoutService(FitCoachDbContext db)
 
     public async Task<StudentDashboardDto> GetStudentDashboardAsync(Guid studentProfileId)
     {
-        var today = (int)DateTime.Today.DayOfWeek; // 0=Sun in .NET, remap to 0=Mon
-        var todayMapped = today == 0 ? 6 : today - 1;
+        var today = DateTime.Today.DayOfWeek; // 0=Sun in .NET, remap to 0=Mon
 
         var activePlan = await db.WorkoutPlans
             .Include(p => p.Days.OrderBy(d => d.OrderIndex))
@@ -110,13 +112,13 @@ public class WorkoutService(FitCoachDbContext db)
 
         if (activePlan is not null)
         {
-            var todayDay = activePlan.Days.FirstOrDefault(d => d.DayOfWeek == todayMapped);
+            var todayDay = activePlan.Days.FirstOrDefault(d => d.DayOfWeek == today);
             todayWorkout = todayDay is not null ? MapDayToDto(todayDay) : null;
 
             // Next upcoming day
             var nextDay = activePlan.Days
-                .Where(d => d.DayOfWeek != todayMapped)
-                .OrderBy(d => (d.DayOfWeek - todayMapped + 7) % 7)
+                .Where(d => d.DayOfWeek != today)
+                .OrderBy(d => (d.DayOfWeek - today + 7) % 7)
                 .FirstOrDefault();
             nextWorkout = nextDay is not null ? MapDayToDto(nextDay) : null;
         }

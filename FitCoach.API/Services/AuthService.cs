@@ -1,12 +1,15 @@
+using FitCoach.API.Data;
+using FitCoach.API.DTOs.Auth;
+using FitCoach.API.DTOs.Student;
+using FitCoach.API.DTOs.Trainer;
+using FitCoach.API.DTOs.User;
+using FitCoach.API.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using FitCoach.API.Data;
-using FitCoach.API.DTOs;
-using FitCoach.API.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FitCoach.API.Services;
 
