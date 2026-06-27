@@ -41,7 +41,8 @@ docker-compose up -d
 
 ```bash
 cd FitCoach.API
-
+#Suba o container de banco de dados
+docker compose up postgres
 # Configure o banco no appsettings.json
 # Rode as migrations
 dotnet ef database update
