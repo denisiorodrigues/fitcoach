@@ -1,5 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using FitCoach.API.Data;
 using FitCoach.API.DTOs.Auth;
+using FitCoach.API.DTOs.Student;
 using FitCoach.API.DTOs.Trainer;
 using FitCoach.API.Models;
 using FitCoach.API.Services;
@@ -79,6 +82,40 @@ public class AuthServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task LoginAsync_EmailNaoCadastrado_RetornaNull()
+    {
+        //Act
+        var resultado = await _sut.LoginAsync(new LoginRequest("naoexiste@teste.com", "senha123"));
+
+        //Assert
+        resultado.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task LoginAsync_TokenGerado_ContemClaimsCorretas()
+    {
+        //Arrange
+        var user = UserFaker.Default()
+            .RuleFor(u => u.Email, "trainer-claims@teste.com")
+            .Generate();
+        _db.Users.Add(user);
+        await _db.SaveChangesAsync();
+
+        var treiner = TreinerFake.Default(user.Id).Generate();
+        _db.TrainerProfiles.Add(treiner);
+        await _db.SaveChangesAsync();
+
+        //Act
+        var resultado = await _sut.LoginAsync(new LoginRequest("trainer-claims@teste.com", "senha123"));
+
+        //Assert
+        var token = new JwtSecurityTokenHandler().ReadJwtToken(resultado!.Token);
+        token.Claims.First(c => c.Type == ClaimTypes.Email).Value.Should().Be("trainer-claims@teste.com");
+        token.Claims.First(c => c.Type == ClaimTypes.Role).Value.Should().Be("Trainer");
+        token.Claims.First(c => c.Type == "profileId").Value.Should().Be(treiner.Id.ToString());
+    }
+
+    [Fact]
     public async Task LoginAsync_UsuarioInativo_RetornaNull()
     {
         //Arrange
@@ -142,6 +179,70 @@ public class AuthServiceTests : IDisposable
         //Assert
         await act.Should().ThrowAsync<InvalidOperationException>();
     }
-    
+
+    [Fact]
+    public async Task RegisterStudentAsync_EmailNovo_CriaUsuarioEPerfilVinculadoAoTrainer()
+    {
+        //Arrange
+        var trainerUser = UserFaker.Default().Generate();
+        _db.Users.Add(trainerUser);
+        await _db.SaveChangesAsync();
+
+        var treiner = TreinerFake.Default(trainerUser.Id).Generate();
+        _db.TrainerProfiles.Add(treiner);
+        await _db.SaveChangesAsync();
+
+        var request = new RegisterStudentRequest("Aluno Teste", "aluno@teste.com", "senha123", "CODE-INVITE");
+
+        //Act
+        var resultado = await _sut.RegisterStudentAsync(request, treiner.Id);
+
+        //Assert
+        resultado.Should().NotBeNull();
+        resultado.User.Email.Should().Be("aluno@teste.com");
+
+        var aluno = await _db.StudentProfiles.FirstOrDefaultAsync(s => s.TrainerId == treiner.Id);
+        aluno.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task RegisterStudentAsync_EmailDuplicado_LancaExcecao()
+    {
+        //Arrange
+        var trainerUser = UserFaker.Default().Generate();
+        _db.Users.Add(trainerUser);
+        var alunoExistente = UserFaker.Default()
+            .RuleFor(u => u.Email, "aluno@teste.com")
+            .Generate();
+        _db.Users.Add(alunoExistente);
+        await _db.SaveChangesAsync();
+
+        var treiner = TreinerFake.Default(trainerUser.Id).Generate();
+        _db.TrainerProfiles.Add(treiner);
+        await _db.SaveChangesAsync();
+
+        var request = new RegisterStudentRequest("Aluno", "aluno@teste.com", "senha123", "CODE-INVITE");
+
+        //Act
+        var act = () => _sut.RegisterStudentAsync(request, treiner.Id);
+
+        //Assert
+        await act.Should().ThrowAsync<InvalidOperationException>();
+    }
+
+    [Fact]
+    public async Task RegisterStudentAsync_TrainerInexistente_LancaExcecao()
+    {
+        //Arrange
+        var request = new RegisterStudentRequest("Aluno", "aluno-orfao@teste.com", "senha123", "CODE-INVITE");
+
+        //Act
+        var act = () => _sut.RegisterStudentAsync(request, Guid.NewGuid());
+
+        //Assert
+        await act.Should().ThrowAsync<InvalidOperationException>()
+            .WithMessage("*Trainer não encontrado*");
+    }
+
     public void Dispose() => _db.Dispose();
 }
