@@ -15,6 +15,6 @@ public class WorkoutDay
     public int OrderIndex { get; set; }
 
     [ForeignKey("PlanId")] public WorkoutPlan Plan { get; set; }
-    public ICollection<PlanExercise> Exercises { get; set; }
+    public ICollection<PlanExercise> Exercises { get; set; } = new List<PlanExercise>();
     public ICollection<WorkoutSession> Sessions { get; set; }
 }

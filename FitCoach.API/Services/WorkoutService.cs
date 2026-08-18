@@ -141,10 +141,16 @@ public class WorkoutService(FitCoachDbContext db)
             .Select(s => MapSessionToDto(s))
             .ToListAsync();
 
-        // Personal records: max weight per exercise
-        var prs = await db.SessionSets
+        // Personal records: max weight per exercise.
+        // GroupBy + OrderBy().First() no mesmo Select não é traduzível pelo provider
+        // (InMemory e Npgsql), então a projeção crua vem do banco e o agrupamento roda em memória.
+        var setsDoAluno = await db.SessionSets
             .Where(ss => ss.Session.StudentId == studentProfileId)
-            .GroupBy(ss => ss.PlanExercise.Exercise.Name)
+            .Select(ss => new { ss.PlanExercise.Exercise.Name, ss.WeightKg, ss.RepsDone, ss.LoggedAt })
+            .ToListAsync();
+
+        var prs = setsDoAluno
+            .GroupBy(ss => ss.Name)
             .Select(g => new PersonalRecordDto(
                 g.Key,
                 g.Max(ss => ss.WeightKg),
@@ -153,7 +159,7 @@ public class WorkoutService(FitCoachDbContext db)
             ))
             .OrderByDescending(pr => pr.AchievedAt)
             .Take(5)
-            .ToListAsync();
+            .ToList();
 
         return new StudentDashboardDto(
             todayWorkout, nextWorkout,

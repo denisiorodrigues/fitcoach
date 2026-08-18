@@ -26,5 +26,5 @@ public class WorkoutPlan
     [ForeignKey("StudentId")] 
     public StudentProfile Student { get; set; }
     
-    public ICollection<WorkoutDay> Days { get; set; }
+    public ICollection<WorkoutDay> Days { get; set; } = new List<WorkoutDay>();
 }
