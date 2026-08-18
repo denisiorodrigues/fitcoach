@@ -76,8 +76,11 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // ─── Migrations on startup ────────────────────────────────────────────────────
-using (var scope = app.Services.CreateScope())
+// Pulado em "Testing": o WebApplicationFactory troca o provider para InMemory,
+// que não suporta migrations (é só relacional/Npgsql).
+if (!app.Environment.IsEnvironment("Testing"))
 {
+    using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<FitCoachDbContext>();
     await dbContext.Database.MigrateAsync();
 }
@@ -96,3 +99,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Expõe a classe Program para o WebApplicationFactory dos testes de integração
+public partial class Program { }
