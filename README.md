@@ -6,7 +6,7 @@ Plataforma completa inspirada no App Treino (apptreino.com.br) para academias e 
 
 ```
 FitCoach/
-├── FitCoach.API/          → Backend .NET 8 + PostgreSQL
+├── FitCoach.API/          → Backend .NET 10 + PostgreSQL
 ├── FitCoach.Web/          → Painel Web (Next.js 14) — Professor
 ├── FitCoach.Android/      → App Android (Kotlin) — Aluno     [Fase 2]
 └── FitCoach.WearOS/       → App Wear OS (Kotlin) — Relógio   [Fase 2]
@@ -14,15 +14,15 @@ FitCoach/
 
 ## Stack
 
-| Camada | Tecnologia |
-|--------|-----------|
-| API | .NET 8 · ASP.NET Core · Entity Framework Core |
-| Banco | PostgreSQL 16 |
-| Auth | JWT Bearer + BCrypt |
+| Camada | Tecnologia                                              |
+|--------|---------------------------------------------------------|
+| API | .NET 10 · ASP.NET Core · Entity Framework Core          |
+| Banco | PostgreSQL 16                                           |
+| Auth | JWT Bearer + BCrypt                                     |
 | Web | Next.js 14 · TypeScript · Tailwind CSS · TanStack Query |
-| Android | Kotlin · Jetpack Compose · Retrofit |
-| Wear OS | Kotlin · Wear Compose · Health Services API |
-| Cloud | AWS (S3 para mídia) / Azure App Service |
+| Android | Kotlin · Jetpack Compose · Retrofit                     |
+| Wear OS | Kotlin · Wear Compose · Health Services API             |
+| Cloud | AWS (S3 para mídia) / Azure App Service                 |
 
 ## Início Rápido (Docker)
 
