@@ -40,7 +40,7 @@ docker-compose up -d
 ### API (.NET)
 
 ```bash
-cd FitCoach.API
+cd apps/backend/FitCoach.API
 #Suba o container de banco de dados
 docker compose up postgres
 # Configure o banco no appsettings.json
@@ -54,7 +54,7 @@ dotnet run
 ### Web (Next.js)
 
 ```bash
-cd FitCoach.Web
+cd apps/web
 npm install
 
 # Configure o .env.local
