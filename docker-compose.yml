@@ -21,7 +21,7 @@ services:
   # ── .NET API ────────────────────────────────────────────────────────────────
   api:
     build:
-      context: ./FitCoach.API
+      context: ./apps/backend/FitCoach.API
       dockerfile: Dockerfile
     ports:
       - "5000:80"
@@ -36,16 +36,16 @@ services:
         condition: service_healthy
 
   # ── Next.js Web ─────────────────────────────────────────────────────────────
-  web:
-    build:
-      context: ./FitCoach.Web
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:5000/api
-    depends_on:
-      - api
+  #web:
+  #  build:
+  #    context: ./apps/web
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "3000:3000"
+  #  environment:
+  #    NEXT_PUBLIC_API_URL: http://localhost:5000/api
+  #  depends_on:
+  #    - api
 
 volumes:
   postgres_data:
