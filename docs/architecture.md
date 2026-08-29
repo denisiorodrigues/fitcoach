@@ -3,6 +3,7 @@
 **Escopo**: FitCoach.API + FitCoach.Web + mobile (planejado)
 **Baseado em**: documentação gerada em 20 ago 2026 (branch `test/integration-controllers`) + decisões de arquitetura discutidas para as próximas fases
 **Autor**: mantido por um desenvolvedor solo
+**Ver também**: [`requisitos.md`](./requisitos.md) (requisitos funcionais e não-funcionais numerados), [`roadmap.md`](./roadmap.md) (fases e pendências), [`regras-de-negocio.md`](./regras-de-negocio.md), [`plano-de-negocio.md`](./plano-de-negocio.md) (produto e receita) e [`gamificacao.md`](./gamificacao.md) (design da gamificação do aluno)
 
 ---
 

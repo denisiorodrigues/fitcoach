@@ -2,6 +2,18 @@
 
 Plataforma completa inspirada no App Treino (apptreino.com.br) para academias e personal trainers.
 
+## Documentação
+
+| Documento | Conteúdo |
+|---|---|
+| [`docs/plano-de-negocio.md`](docs/plano-de-negocio.md) | Visão de produto, personas, concorrência, modelo de receita e riscos |
+| [`docs/requisitos.md`](docs/requisitos.md) | Requisitos funcionais (RF) e não-funcionais (RNF) numerados, com prioridade, status e rastreabilidade |
+| [`docs/gamificacao.md`](docs/gamificacao.md) | Design da gamificação do aluno — streak, dias treinados, conquistas e ranking |
+| [`docs/roadmap.md`](docs/roadmap.md) | Fases de implementação e pendências para fechar cada uma |
+| [`docs/regras-de-negocio.md`](docs/regras-de-negocio.md) | Dicionário de campos, obrigatoriedades e regras de autorização |
+| [`docs/architecture.md`](docs/architecture.md) | Visão técnica e decisões de arquitetura |
+| [`docs/manual-do-usuario.md`](docs/manual-do-usuario.md) | Como usar cada tela |
+
 ## Arquitetura
 
 ```
