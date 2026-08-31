@@ -22,8 +22,8 @@ diz isso — não descreve como se já existisse.
   - Módulos: **AUTH** (autenticação), **CONV** (convite/autocadastro),
     **ALU** (aluno/perfil/CPF), **TRN** (painel do treinador),
     **EXE** (exercícios), **PLN** (planos de treino), **SES** (sessões/execução),
-    **GAM** (gamificação do aluno), **WCH** (relógio),
-    **FIN** (assinatura/financeiro).
+    **GAM** (gamificação do aluno), **AVA** (avaliação física do aluno),
+    **WCH** (relógio), **FIN** (assinatura/financeiro).
   - Categorias RNF: **SEG** (segurança), **DES** (desempenho/escala),
     **CONF** (confiabilidade/entrega), **USA** (usabilidade),
     **ARQ** (portabilidade/arquitetura), **VAL** (validação de dados),
@@ -175,7 +175,42 @@ inteiro é posterior à Fase 2.
 
 ---
 
-## 9. RF — WCH (relógio: watchOS + Wear OS)
+## 9. RF — AVA (avaliação física e anamnese do aluno)
+
+Épico novo, escopado com o dono do produto em 31 ago 2026 — resolve a decisão #14
+que estava aberta em §13 ("Avaliação física / anamnese... entra no produto ou fica
+fora de escopo?"): **entra**. Motivação: table stake para consultoria online
+([`plano-de-negocio.md`](./plano-de-negocio.md) §5.5). Cobre anamnese + três
+frentes de medida corporal (bioimpedância, dobras cutâneas/adipômetro,
+circunferências/fita métrica) + histórico de avaliações do aluno + feedback do
+aluno sobre a avaliação recebida. A anamnese estruturada aqui **substitui** o uso
+do campo livre `healthNotes` de RF-ALU-1 como anamnese informal — `healthNotes`
+continua existindo para observações rápidas do treinador, sem sobreposição de
+função.
+
+Como GAM (§8), precisa de fatia própria de backend (entidade, endpoints, testes) +
+tela de registro no painel web do treinador (quem aplica a avaliação), a agendar
+no backlog; a visualização do histórico e o feedback do aluno aparecem para ele na
+**Fase 3** (app do aluno), quando esse app existir.
+
+| ID | Requisito | Prio | Status | Fase | Regra |
+|---|---|---|---|---|---|
+| RF-AVA-1 | Entidade `PhysicalEvaluation`: uma avaliação = 1 registro datado (`EvaluatedAt`), vinculado a `StudentId` + `TrainerId` (quem aplicou); um aluno pode ter várias ao longo do tempo | Must | ⬜ | backlog | módulo novo |
+| RF-AVA-2 | Anamnese estruturada por avaliação: histórico de saúde, lesões/cirurgias prévias, doenças pré-existentes, medicamentos em uso, nível de atividade física atual, restrições | Must | ⬜ | backlog | módulo novo |
+| RF-AVA-3 | Bioimpedância: % de gordura corporal, massa magra (kg), massa muscular (kg), água corporal (%), taxa metabólica basal (kcal); preenchido manualmente pelo treinador a partir da leitura do aparelho — sem integração direta com hardware no MVP | Must | ⬜ | backlog | módulo novo |
+| RF-AVA-4 | Dobras cutâneas (adipômetro), em mm, por ponto de medição: tricipital, subescapular, axilar média, suprailíaca, abdominal, coxa, peitoral (protocolo Pollock 7 dobras) | Must | ⬜ | backlog | módulo novo |
+| RF-AVA-5 | Circunferências (fita métrica), em cm: pescoço, ombro, tórax, cintura, abdômen, quadril, braço (dir./esq., relaxado e contraído), antebraço (dir./esq.), coxa (dir./esq.), panturrilha (dir./esq.) | Must | ⬜ | backlog | módulo novo |
+| RF-AVA-6 | `POST/GET /api/students/{id}/evaluations`: treinador registra e lista as avaliações do próprio aluno; isolamento por dono como os demais módulos (RNF-SEG-2) | Must | ⬜ | backlog | módulo novo |
+| RF-AVA-7 | Tela no painel web do treinador: formulário de registro (anamnese + as 3 frentes de medida) e histórico/evolução do aluno (comparação entre avaliações ao longo do tempo) | Must | ⬜ | backlog | módulo novo |
+| RF-AVA-8 | Aluno visualiza no app o histórico das próprias avaliações (medidas + evolução) | Should | ⬜ | Fase 3 | módulo novo |
+| RF-AVA-9 | Aluno registra feedback em texto sobre uma avaliação recebida (`POST /api/evaluations/{id}/feedback`), visível ao treinador | Must | ⬜ | Fase 3 | módulo novo |
+| RF-AVA-10 | Fotos de acompanhamento por avaliação (item já citado no backlog original do roadmap) | Could | ⬜ | decisão aberta | roadmap backlog |
+| RF-AVA-11 | Protocolo de dobras cutâneas: 3 ou 7 pontos; sistema calcula % de gordura pela fórmula do protocolo automaticamente, ou só arquiva os valores brutos digitados pelo treinador | Could | ⬜ | decisão aberta | módulo novo |
+| RF-AVA-12 | Estrutura do feedback do aluno (RF-AVA-9): só texto livre, ou também nota/rating estruturado? Editável depois de enviado? | Could | ⬜ | decisão aberta | módulo novo |
+
+---
+
+## 10. RF — WCH (relógio: watchOS + Wear OS)
 
 Nada implementado. Módulo de lógica compartilhada em Kotlin Multiplatform + UI
 nativa por plataforma (`architecture.md §5`).
@@ -190,7 +225,7 @@ nativa por plataforma (`architecture.md §5`).
 
 ---
 
-## 10. RF — FIN (assinatura e financeiro)
+## 11. RF — FIN (assinatura e financeiro)
 
 Backlog — sem issue aberta. Detalhado no [`plano-de-negocio.md`](./plano-de-negocio.md) §6–§7.
 
@@ -203,7 +238,7 @@ Backlog — sem issue aberta. Detalhado no [`plano-de-negocio.md`](./plano-de-ne
 
 ---
 
-## 11. RNF — Requisitos não-funcionais
+## 12. RNF — Requisitos não-funcionais
 
 ### 11.1 Segurança (SEG)
 
@@ -214,7 +249,7 @@ Backlog — sem issue aberta. Detalhado no [`plano-de-negocio.md`](./plano-de-ne
 | RNF-SEG-3 | `Jwt__Key` com no mínimo 32 caracteres, gerado aleatoriamente | Must | ✅ | — | README |
 | RNF-SEG-4 | CORS de produção: hoje libera só `localhost:3000` e o placeholder `fitcoach.yourdomain.com` — trocar pelo domínio real antes de expor o painel | Must | ⬜ | Fase 1 (item 5) | architecture §6 |
 | RNF-SEG-5 | Tokens em cookie `httpOnly` + `Secure` + `SameSite` (hoje a API devolve token + refreshToken no corpo e o web guarda em `localStorage`) — mudança de contrato API↔client, os dois lados mudam juntos | Must | ⬜ | Fase 1 (item 6) / Fase 2 (item 5) | architecture §6 |
-| RNF-SEG-6 | Dados sensíveis de saúde/atividade (`healthNotes`, FC, calorias): cache local com expiração, nunca em log, tráfego sempre em TLS | Must | ⬜ (relevante ao construir mobile) | Fase 3 | architecture §6 |
+| RNF-SEG-6 | Dados sensíveis de saúde/atividade (`healthNotes`, FC, calorias, anamnese e medidas de avaliação física — RF-AVA): cache local com expiração, nunca em log, tráfego sempre em TLS | Must | ⬜ (relevante ao construir mobile) | Fase 3 | architecture §6 |
 
 ### 11.2 Desempenho e escala (DES)
 
@@ -268,7 +303,7 @@ Backlog — sem issue aberta. Detalhado no [`plano-de-negocio.md`](./plano-de-ne
 
 ---
 
-## 12. Decisões de escopo em aberto
+## 13. Decisões de escopo em aberto
 
 Viram requisitos concretos assim que a decisão for tomada.
 
@@ -286,26 +321,45 @@ Viram requisitos concretos assim que a decisão for tomada.
 | 10 | Gamificação: sem plano ativo, a sequência pausa ou quebra após N dias? | gamificacao.md §9 | RF-GAM-5 |
 | 11 | Ranking: `OptOutLeaderboard` ligado ou desligado por padrão; métrica de ordenação (sequência / pontos / dias no mês); aluno fora do ranking vê a própria posição? | gamificacao.md §9 | RF-GAM-9, RF-GAM-10 |
 | 12 | Gamificação: "semana perfeita" = seg–dom? "Congelar sequência" (streak freeze) entra algum dia? | gamificacao.md §9 | RF-GAM-7 |
+| 13 | **Vídeo demonstrativo por exercício** — todo concorrente tem (400 a 12.000 vídeos); o FitCoach não. Escopar como campo de URL (YouTube) em `Exercise`, ou não entrar? | plano-de-negocio §5.5 | RF-EXE (novo) |
+| 14 | **Adesão acionável**: alertar o treinador sobre aluno em risco de abandono (faltou X dias prescritos). É a aposta nº 2 da diferenciação, sem requisito escrito | plano-de-negocio §5.4 | RF-TRN (novo) |
+| 15 | Avaliação física: fotos de acompanhamento entram nesta fase do épico ou ficam pra depois? Se entram, onde armazenar (ainda não há upload de arquivo no projeto) | §9 | RF-AVA-10 |
+| 16 | Avaliação física: dobras cutâneas em 3 ou 7 pontos (protocolo)? Sistema calcula % de gordura pela fórmula, ou só arquiva os valores brutos? | §9 | RF-AVA-11 |
+| 17 | Avaliação física: feedback do aluno é só texto livre ou também nota/rating estruturado? É editável depois de enviado? | §9 | RF-AVA-12 |
 
 ---
 
-## 13. Matriz de rastreabilidade (fase → requisitos)
+## 14. Matriz de rastreabilidade (fase → requisitos)
 
 | Fase do roadmap | Requisitos que a fase entrega |
 |---|---|
 | **Já entregue (baseline)** | RF-AUTH-1 a 6 · RF-ALU-1 · RF-TRN-1, TRN-2 · RF-EXE-1 a 4 · RF-PLN-1 a 4 · RF-SES-1 a 5 · RNF-SEG-1 a 3 · RNF-DES-1 a 3 · RNF-CONF-2, CONF-3 · RNF-USA-3 · RNF-ARQ-1, ARQ-3, ARQ-4 |
 | **Fase 1 — Backend** | RF-AUTH-7 · RF-CONV-1 a 4 · RF-ALU-2 a 6 · RF-EXE-5 · RF-PLN-5, PLN-8 · RNF-SEG-4, SEG-5 · RNF-CONF-1 · RNF-VAL-1, VAL-2 |
 | **Fase 2 — Painel Web** | RF-CONV-5, CONV-6 · RF-ALU-7, ALU-8 · RF-TRN-3, TRN-4, TRN-5 · RF-EXE-6 · RF-PLN-6, PLN-7 · RNF-USA-1 |
-| **Fase 3 — Mobile (aluno)** | RF-SES-6 a 9 · RF-GAM-14 (superfície) · RNF-SEG-6 · RNF-LEG-1 |
+| **Fase 3 — Mobile (aluno)** | RF-SES-6 a 9 · RF-GAM-14 (superfície) · RF-AVA-8, AVA-9 (superfície) · RNF-SEG-6 · RNF-LEG-1 |
 | **Fase 4 — Watch** | RF-WCH-1 a 5 · RNF-USA-2 · RNF-ARQ-2 (conclusão) |
 | **Backlog — Gamificação** (design em `gamificacao.md`) | RF-GAM-1 a 13 · RNF-DES-5 · RNF-LEG-3 |
+| **Backlog — Avaliação física** (design em §9) | RF-AVA-1 a 7 |
 | **Backlog — outros** | RF-EXE-7 · RF-FIN-1 a 4 |
-| **Decisão de PO pendente** | RF-AUTH-8 · RF-TRN-7 · RF-PLN-9 · RF-GAM-5, GAM-10 · RNF-LEG-2 (ver §12) |
+| **Decisão de PO pendente** | RF-AUTH-8 · RF-TRN-7 · RF-PLN-9 · RF-GAM-5, GAM-10 · RF-AVA-10 a 12 · RNF-LEG-2 (ver §13) |
 
 ---
 
 ## Changelog
 
+- **31 ago 2026**: adicionado o módulo **RF-AVA** (avaliação física e anamnese do
+  aluno), resolvendo a decisão #14 que estava aberta em §13 desde 29 ago — escopo
+  definido com o dono do produto: anamnese estruturada + três frentes de medida
+  corporal (bioimpedância, dobras cutâneas/adipômetro, circunferências/fita
+  métrica), histórico de avaliações e feedback do aluno sobre a avaliação
+  recebida (`RF-AVA-1` a `12`). Renumeradas as seções WCH (§10), FIN (§11), RNF
+  (§12), decisões (§13) e matriz (§14); `RNF-SEG-6` estendido para cobrir os
+  dados de `RF-AVA`; 3 novas decisões em aberto (protocolo de dobras, fotos de
+  acompanhamento, estrutura do feedback do aluno).
+- **29 ago 2026**: três decisões de escopo novas (§12, #13–15) vindas da pesquisa
+  de concorrência ([`plano-de-negocio.md`](./plano-de-negocio.md) §5): vídeo
+  demonstrativo por exercício, avaliação física/anamnese e alerta de aluno em
+  risco de abandono. Nenhum RF/RNF alterado — são lacunas ainda sem decisão.
 - **27 ago 2026**: criação. Requisitos derivados de
   [`regras-de-negocio.md`](./regras-de-negocio.md),
   [`roadmap.md`](./roadmap.md) e [`architecture.md`](./architecture.md); nenhum

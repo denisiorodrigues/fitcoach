@@ -12,9 +12,11 @@ diferencia e como gera receita. Complementa os documentos técnicos e operaciona
 
 **Escrito em 27 ago 2026.** Os fatos sobre o sistema (funcionalidades, estado,
 regras) vêm dos documentos acima, levantados direto do código em 20–25 ago 2026.
-Os números de mercado, concorrência e preço ainda **não foram pesquisados** —
-estão marcados como `[a preencher — pesquisa]` ou `[hipótese — validar]`. Este
-documento entrega o esqueleto e as perguntas certas, não afirmações sem fonte.
+A **concorrência (§5) foi pesquisada em 29 ago 2026** — preços e recursos vêm das
+páginas públicas dos produtos e mudam com o tempo. Tamanho de mercado e a
+precificação do FitCoach seguem sem fonte, marcados `[a preencher — pesquisa]` ou
+`[hipótese — validar]`: nesses pontos o documento entrega as perguntas certas, não
+afirmações.
 
 ---
 
@@ -31,10 +33,12 @@ celular e, no futuro, pelo relógio.
 - **Modelo de receita**: assinatura mensal/anual, com faixas por número de alunos
   ativos; camada superior para academias com vários professores.
 - **Referência de mercado**: App Treino (apptreino.com.br), citado como
-  inspiração no README do projeto.
-- **Diferencial de médio prazo**: acompanhamento do treino no **relógio**
-  (Apple Watch + Wear OS) — treinar sem o celular na mão, com frequência cardíaca
-  e timer.
+  inspiração no README — mas a pesquisa da §5 mostrou que ele mira academia/estúdio;
+  o concorrente direto do autônomo é o **MFit Personal** (R$ 10,90–39,90/mês).
+- **Diferenciação escolhida** (§5.4): atacar a **adesão do aluno**, problema que
+  nenhum concorrente trata — gamificação da constância, adesão acionável no
+  dashboard e relógio em **watchOS + Wear OS** (só o Wear OS é território livre;
+  Apple Watch é paridade com o App Treino).
 
 **Estado atual do produto** (de `architecture.md §2`): a API (.NET 10 + PostgreSQL)
 está funcional, com 61 testes automatizados; o painel web (Next.js) tem 2 telas
@@ -97,8 +101,13 @@ passa a ser.
 Acompanhamento do treino no **relógio** — módulo nativo watchOS (SwiftUI) + Wear OS
 (Compose) sobre uma camada de lógica compartilhada em Kotlin Multiplatform
 (`architecture.md §5`). O relógio registra a sessão offline e sincroniza depois.
-É a Fase 4 do roadmap e o principal gancho de marketing frente a concorrentes que
-só têm app de celular.
+É a Fase 4 do roadmap.
+
+⚠️ **Ajustado pela pesquisa de 29 ago 2026** (§5.3): "ter relógio" **não** é
+diferencial — o App Treino já tem app de Apple Watch com HealthKit (FC, calorias,
+distância) e sync em tempo real. O que é território livre é o **Wear OS**: nenhum
+concorrente brasileiro pesquisado atende relógio Android. O argumento de marketing
+correto é *"funciona também no seu relógio Android"*, não *"o único com relógio"*.
 
 ### 3.4 Retenção via gamificação (aluno)
 
@@ -133,17 +142,91 @@ O sistema tem dois papéis fixos (`UserRole`: Trainer e Student —
 
 ## 5. Concorrência
 
-Comparativo de esqueleto — os campos dos concorrentes estão marcados `[a confirmar]`
-enquanto não houver verificação direta.
+**Pesquisado em 29 ago 2026** a partir das páginas públicas dos produtos e de
+comparativos do setor. Preços mudam — reconferir antes de decidir precificação.
 
-| Critério | FitCoach (alvo) | App Treino | Planilha + WhatsApp | Outros apps de gestão `[a preencher]` |
-|---|---|---|---|---|
-| Prescrição por dia da semana | ✅ (alvo) | `[a confirmar]` | Manual | `[a confirmar]` |
-| Dashboard de adesão do treinador | ✅ funcional | `[a confirmar]` | ❌ | `[a confirmar]` |
-| App do aluno | ⬜ Fase 3 | `[a confirmar]` | ❌ | `[a confirmar]` |
-| Registro de série / progressão de carga | 🟡 API pronta | `[a confirmar]` | ❌ | `[a confirmar]` |
-| Integração com relógio (watchOS + Wear OS) | ⬜ Fase 4 (diferencial) | `[a confirmar]` | ❌ | `[a confirmar]` |
-| Preço | `[hipótese — validar]` | `[a confirmar]` | Grátis (custo é o tempo) | `[a confirmar]` |
+### 5.1 Quem já está no mercado
+
+| Produto | Foco | Preço público (ago 2026) | Sinais de escala |
+|---|---|---|---|
+| **App Treino** (apptreino.com.br) | Academia, estúdio, box de CrossFit, coach | Não divulga (venda B2B) | +2 mi de usuários em 2 anos, +48 mi de treinos executados, +76 mi de aulas agendadas, 4.8 de média em +300 mil avaliações |
+| **MFit Personal** | Personal autônomo | Grátis (1 aluno) · R$ 10,90/mês (3 alunos) · R$ 39,90/mês (ilimitado); anual R$ 406,90 | 1.800+ vídeos de exercícios |
+| **Tecnofit Personal** | Estúdio/academia com espaço físico | Grátis (básico) · a partir de R$ 189/mês | 500–600 vídeos; integra catraca |
+| **TreinoAI** | Consultoria online com IA | R$ 24,90 a R$ 999,90/mês (por nº de clientes) | 400+ vídeos; periodização por IA |
+| **Mobitrainer / Wiki4Fit** | Autônomo e estúdio de modalidades | A partir de R$ 29–29,90/mês | — |
+| **Vedius / NextFit** | Biblioteca ampla / treino + nutrição | Sob consulta | Vedius: 12.000+ exercícios em vídeo |
+| **Planilha + WhatsApp** | Autônomo iniciante | Grátis (custo é o tempo) | — |
+
+### 5.2 Comparativo por critério
+
+| Critério | FitCoach (alvo) | App Treino | MFit Personal | Tecnofit | Planilha + WhatsApp |
+|---|---|---|---|---|---|
+| Prescrição por dia da semana | ✅ funcional | ✅ | ✅ | ✅ | Manual |
+| Biblioteca de **vídeos** de exercício | ❌ (só texto/músculo/equipamento) | ✅ | ✅ 1.800+ | ✅ 500+ | ❌ |
+| Avaliação física / anamnese | ❌ | ✅ (com fotos) | ✅ | ✅ (antropometria, composição corporal) | Manual |
+| Cobrança do aluno pelo app | ❌ (backlog) | ✅ cartão | ✅ (Carteira MFIT, PIX, boleto) | ✅ | ❌ |
+| Agenda / check-in de aula | ❌ (fora de escopo) | ✅ | ❌ | ✅ | ❌ |
+| **Dashboard de adesão do treinador** | ✅ funcional | Parcial (histórico do aluno) | Parcial (feedback do aluno) | Parcial | ❌ |
+| Registro de série com progressão de carga | 🟡 API pronta | ✅ | ✅ | ✅ | ❌ |
+| **Apple Watch** | ⬜ Fase 4 | ✅ (sync em tempo real + HealthKit: FC, calorias, distância) | ❌ | ❌ | ❌ |
+| **Wear OS** | ⬜ Fase 4 | ❌ | ❌ | ❌ | ❌ |
+| **Gamificação** (streak, conquistas, ranking) | ⬜ backlog | ❌ | ❌ | ❌ | ❌ |
+| Preço de entrada | `[hipótese — validar]` | Sob consulta | R$ 10,90/mês | Grátis / R$ 189 | R$ 0 |
+
+### 5.3 O que a pesquisa mostrou
+
+1. **A âncora de preço do autônomo é baixíssima.** MFit cobra R$ 39,90/mês por
+   alunos ilimitados; Mobitrainer e Wiki4Fit ficam em ~R$ 29. Qualquer preço acima
+   disso precisa de justificativa forte. Isso invalida a hipótese original da §7 —
+   ver revisão lá.
+2. **Todo mundo compete no mesmo eixo**: tamanho da biblioteca de vídeos (400 →
+   1.800 → 12.000), avaliação física e cobrança. É um eixo caro de alcançar e onde
+   o FitCoach chega por último — **não é onde disputar**.
+3. **App Treino não é concorrente direto do autônomo.** O posicionamento dele é
+   academia/estúdio/box: agenda de aulas, check-in, catraca, lista de espera, rede
+   social. Compete de fato com o Tecnofit, não com o MFit.
+4. **Apple Watch já não é diferencial** — o App Treino tem, com HealthKit
+   (frequência cardíaca, calorias, distância) e sync em tempo real.
+5. **Wear OS é um buraco aberto.** Nenhum dos concorrentes brasileiros pesquisados
+   tem app para Wear OS. Quem cobre relógio Android hoje é app genérico de
+   registro de treino (Hevy, GymRun), sem vínculo com o personal.
+6. **Ninguém fala de adesão do aluno como produto.** Todos vendem para o treinador
+   *prescrever e cobrar*. Nenhum comparativo do setor cita streak, conquistas ou
+   ranking. O problema "meu aluno parou de treinar" não tem dono.
+
+### 5.4 Onde o FitCoach pode se destacar
+
+A aposta não é ser um MFit mais completo — é atacar um problema que os outros não
+tratam: **o aluno abandonar o treino**. É a dor que gera cancelamento do treinador,
+e portanto o churn do próprio SaaS.
+
+**Posicionamento**: *o app que faz o aluno treinar* — não o app que faz o personal
+prescrever.
+
+Três apoios concretos, em ordem de custo/benefício:
+
+| # | Aposta | Por que se sustenta | Onde está |
+|---|---|---|---|
+| 1 | **Gamificação da constância** — streak por dia prescrito, dias treinados, conquistas, ranking da turma | Nenhum concorrente pesquisado tem. Custo baixo: sai do histórico de sessões que a API **já registra**, sem mudar o fluxo de treino | `gamificacao.md`; backlog com fatia própria após a Fase 2 |
+| 2 | **Adesão como produto, não como relatório** — o dashboard já calcula taxa de adesão; falta agir sobre ela (quem faltou, quem está em risco, alerta ao treinador) | O treinador compra "meus alunos treinam mais", que é o que ele revende ao aluno | Dashboard ✅ funcional; alertas/risco = ⬜ a especificar |
+| 3 | **Relógio nos dois sistemas, com foco em musculação** — watchOS **e Wear OS** | Wear OS é buraco aberto no mercado BR; Apple Watch é paridade com o App Treino, não vantagem | Fase 4 (`architecture.md §5`) |
+
+**Correção de rota**: o "diferencial do relógio" precisa ser reescrito como
+*"o único com Wear OS"*, não *"o único com relógio"* — a segunda afirmação é falsa.
+
+### 5.5 O que falta ao FitCoach para ser considerado
+
+Table stakes que **todos** os concorrentes têm e o FitCoach não:
+
+| Lacuna | Peso na decisão do treinador | Situação |
+|---|---|---|
+| Vídeo demonstrativo do exercício | Alto — o aluno não sabe executar por texto | ⬜ não escopado |
+| Avaliação física / anamnese | Alto para consultoria online | ⬜ não escopado |
+| Receber pagamento do aluno pelo app | Alto para o autônomo | ⬜ backlog |
+
+Sem pelo menos o vídeo, a troca dificilmente acontece — a diferenciação da §5.4
+não compensa a ausência do básico. **Decisão pendente**: escopar vídeo de
+exercício (link de YouTube por exercício já resolveria a v1, a custo baixo).
 
 **Concorrente real do autônomo iniciante**: a planilha + WhatsApp. O produto
 precisa ser mais rápido de usar que montar uma planilha, ou a troca não acontece.
@@ -171,14 +254,28 @@ conteúdo de treino pronto (pode virar backlog, sem decisão).
 Estrutura de planos — **todos os valores são hipótese e precisam ser validados**
 (`[hipótese — validar]`).
 
+**Âncora de mercado (§5.1, ago 2026)**: MFit R$ 10,90 (3 alunos) e R$ 39,90
+(ilimitado); Mobitrainer/Wiki4Fit ~R$ 29; TreinoAI a partir de R$ 24,90; Tecnofit
+grátis no básico. O autônomo brasileiro está acostumado à faixa **R$ 10–40/mês**.
+
 | Plano | Preço `[hipótese]` | Alunos ativos | Biblioteca própria | Relatórios | App do aluno | Multi-professor |
 |---|---|---|---|---|---|---|
 | **Free** | R$ 0 | até 3 | ✅ | Básico | ✅ | ❌ |
-| **Pro** | `[hipótese]` /mês | até 40 | ✅ | Completo | ✅ | ❌ |
-| **Academia** | `[hipótese]` /mês | 40+ (faixas) | ✅ | Completo + visão do estúdio | ✅ | ✅ |
+| **Pro** | R$ 29–39 `[hipótese]` /mês | ilimitado | ✅ | Completo + adesão | ✅ | ❌ |
+| **Academia** | `[hipótese]` /mês | ilimitado (por professor) | ✅ | Completo + visão do estúdio | ✅ | ✅ |
+
+Duas consequências da pesquisa:
+
+- **O Pro tem que ser ilimitado.** Cobrar por faixa de alunos (hipótese original:
+  "até 40") fica pior que o concorrente mais barato do mercado, que já dá
+  ilimitado por R$ 39,90. Faixa por nº de alunos foi **descartada** para o Pro.
+- **Não há espaço para preço premium hoje.** Premium exige o que o FitCoach ainda
+  não tem (§5.5). Cobrar mais que R$ 39 só se sustenta depois do relógio (Fase 4),
+  e mesmo assim como plano adicional, não como preço de entrada.
 
 O plano Free existe para reduzir a barreira de adoção (o autônomo testa com
-poucos alunos antes de pagar) e para alimentar o efeito de rede da §8.
+poucos alunos antes de pagar) e para alimentar o efeito de rede da §8. Free com
+3 alunos empata com o MFit pago de entrada — é uma vantagem de aquisição.
 
 ---
 
@@ -233,7 +330,9 @@ analytics ou do módulo de gamificação, ainda não construídos.
 | **Desenvolvedor solo** aprendendo mobile/watch do zero (`architecture.md`) | Prazo das Fases 3–4 imprevisível | Fatiar entregas; não bloquear receita nas fases mobile — o MVP vendável é a Fase 2 (§11) |
 | **Sem CI/CD hoje** (`roadmap.md` Fase 1 item 4) | Regressão silenciosa ao crescer | Item obrigatório para fechar a Fase 1: `dotnet test` a cada PR |
 | **Troca da planilha não acontece** se o produto não for mais rápido que montar planilha | Adoção baixa | Medir "tempo até o primeiro plano criado"; investir em UX da criação de plano |
-| **Concorrente estabelecido** (App Treino) reage ou já cobre o nicho | Competitivo | Diferencial no relógio (Fase 4) + foco no fluxo simples treinador↔aluno; validar gap real na pesquisa da §5 |
+| **Concorrente direto barato** (MFit a R$ 10,90–39,90/mês) domina o autônomo | Competitivo / teto de preço | Não competir em biblioteca de vídeo e cobrança; disputar o eixo de adesão do aluno (§5.4) |
+| **Falta de table stakes** — sem vídeo de exercício, avaliação física nem cobrança, que todos os concorrentes têm (§5.5) | Adoção travada mesmo com boa diferenciação | Escopar o mínimo viável: link de vídeo por exercício. Decisão pendente |
+| **A diferenciação é copiável** — streak e conquistas são baratos de imitar se derem resultado | Vantagem temporária | Usar a janela para acumular dado de adesão e hábito do aluno; o Wear OS (Fase 4) é a barreira mais cara de copiar |
 | **Billing e multi-academia inexistentes** | Sem receita até serem construídos | Escopados no backlog do roadmap; priorizar após a Fase 2 |
 
 ---
@@ -254,6 +353,14 @@ Não duplica o `roadmap.md` técnico — só liga cada fase ao marco de negócio
 
 ## Changelog
 
+- **29 ago 2026**: §5 reescrita com pesquisa real de concorrência (App Treino,
+  MFit Personal, Tecnofit, TreinoAI, Mobitrainer, Wiki4Fit, Vedius, NextFit):
+  preços, recursos e lacunas. Nova §5.4 com a tese de diferenciação (adesão do
+  aluno: gamificação + adesão acionável + Wear OS) e §5.5 com os table stakes que
+  faltam. Corrigido em §1 e §3.3 o "diferencial do relógio" — o App Treino já tem
+  Apple Watch; o território livre é o Wear OS. §7 revista pela âncora de preço de
+  mercado (Pro passa a ser ilimitado, faixa por nº de alunos descartada). §10
+  ganha três riscos novos.
 - **27 ago 2026**: criação. Fatos do sistema derivados de `architecture.md`,
   `roadmap.md`, `regras-de-negocio.md` e `manual-do-usuario.md`; dados de
   mercado, concorrência e preço deixados como pendência de pesquisa/validação.
