@@ -144,7 +144,18 @@ Nada implementado ainda.
 Combinado: só viram funcionalidades detalhadas depois que revisarmos o que foi
 entregue nas Fases 1–4. Por ora, só os buckets herdados do README:
 
-- **Avaliação física** — fotos, gráficos de evolução do aluno.
+- **Avaliação física do aluno** — anamnese + medidas corporais (bioimpedância,
+  dobras cutâneas/adipômetro, circunferências/fita métrica), com histórico de
+  avaliações e gráfico de evolução. **Exceção ao "sem detalhamento" acima**:
+  escopo definido com o dono do projeto em 31 ago 2026 — cobre anamnese
+  estruturada, as três frentes de medida corporal citadas, histórico/evolução do
+  aluno e feedback do aluno sobre a avaliação recebida (visível ao treinador).
+  Fotos de acompanhamento seguem no backlog, mas como decisão em aberto (onde
+  armazenar — o projeto ainda não tem upload de arquivo). Precisa de fatia
+  própria de backend (entidade `PhysicalEvaluation`, endpoints, testes) + tela de
+  registro no painel web do treinador, a agendar; a visualização do histórico e o
+  feedback do aluno aparecem na **Fase 3** (app do aluno), como a Gamificação.
+  Requisitos numerados em [`requisitos.md`](./requisitos.md) §9 (RF-AVA).
 - **Notificações push** (Firebase) — lembretes de treino.
 - **Monetização / multi-academia** — assinatura digital, pagamentos (Stripe/Pagar.me), suporte a múltiplas academias.
 - **Gamificação do aluno** — sequência (streak) de treinos prescritos, contador de
@@ -169,6 +180,11 @@ entregue nas Fases 1–4. Por ora, só os buckets herdados do README:
 
 ## Changelog deste documento
 
+- **31 ago 2026**: escopado o item de backlog **Avaliação física do aluno** —
+  anamnese + medidas corporais (bioimpedância, dobras cutâneas/adipômetro,
+  circunferências/fita métrica), histórico de avaliações e feedback do aluno
+  sobre a avaliação recebida. Escopo definido com o dono do projeto; detalhado em
+  [`requisitos.md`](./requisitos.md) §9 (novo módulo RF-AVA).
 - **25 ago 2026**: criação. Fases e critérios definidos em conversa com o dono do
   projeto; estado de cada item verificado direto no código (`apps/backend`,
   `apps/web`), não só na documentação pré-existente.
