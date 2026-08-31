@@ -27,3 +27,6 @@ Thumbs.db
 
 # Documentação local
 implementações/
+
+# IDEs
+apps/backend/.idea
