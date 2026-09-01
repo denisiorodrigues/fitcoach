@@ -2,7 +2,8 @@
 
 Documento de referência do produto: o que já existe, o que falta em cada fase, e o
 backlog de temas futuros. É a base pra depois criar o GitHub Project (fases →
-milestones, itens → issues). Nada daqui foi subido pro GitHub ainda.
+milestones, itens → issues) — a organização em si está em
+[`github-project.md`](./github-project.md). Nada daqui foi subido pro GitHub ainda.
 
 Ver também: [`requisitos.md`](./requisitos.md) (requisitos numerados e rastreáveis,
 com matriz fase → requisito), [`regras-de-negocio.md`](./regras-de-negocio.md),
@@ -90,6 +91,7 @@ backend sai desta fase já em condição de produção, não só funcionalmente 
 | 8 | Tela pública de cadastro do aluno via convite | Acessível sem login, a partir do link recebido. Aluno preenche os próprios dados (nome, e-mail, senha, **CPF**); vínculo com o trainer vem do código do convite. Ao final: se acesso for via navegador desktop, redireciona pra `/login`; se for mobile, mostra link pra baixar o app (Fase 3) — enquanto o app não existe, esse segundo caminho cai também no `/login` como fallback. |
 | 9 | Busca por CPF + aviso de duplicidade | Campo de CPF com busca ao digitar (usa o endpoint de busca da Fase 1, item 7), tanto no formulário de convite (item 8) quanto no fluxo de cadastro direto do treinador (rota `/students/new` — confirmada na varredura de 25 ago 2026: o dashboard já linka pra ela no estado vazio "Nenhum aluno cadastrado ainda", mas a página não existe). Exibir aviso de duplicidade **só quando o CPF já existir na carteira do mesmo treinador** — CPF cadastrado sob outro treinador não conta como duplicado e não deve nem aparecer na busca (o endpoint da Fase 1 já é restrito ao trainer autenticado, então não há vazamento de "esse CPF já é aluno de alguém"). |
 | 10 | Tela `/students/new` (cadastro direto de aluno) | Confirmada na varredura de 25 ago 2026: `dashboard/page.tsx` já linka pra `/students/new` no estado vazio, mas a página não existe — precisa ser criada (nome, e-mail, senha, CPF). |
+| 11 | Tela de detalhe do plano (`/plans/{id}`) | Gap encontrado montando o plano do GitHub Project (1 set 2026): `RF-PLN-7` (`requisitos.md` §6) já aparecia na matriz de rastreabilidade §14 como entrega da Fase 2, mas não tinha item correspondente aqui. Hoje, ao salvar um plano (item 2 acima, já ✅), o treinador é levado pra essa rota e ela não existe (`manual-do-usuario.md` §2) — a única confirmação de que salvou é a ausência de erro. |
 
 ---
 
@@ -196,6 +198,10 @@ entregue nas Fases 1–4. Por ora, só os buckets herdados do README:
 
 ## Changelog deste documento
 
+- **1 set 2026**: novo item 11 na Fase 2 — tela de detalhe do plano (`/plans/{id}`,
+  `RF-PLN-7`). Gap achado montando o plano do GitHub Project: o requisito já
+  existia e já estava na matriz de rastreabilidade de
+  [`requisitos.md`](./requisitos.md) §14, mas não tinha item numerado aqui.
 - **31 ago 2026**: varredura de consistência — Fase 3 ganha o item 7 (avaliação
   física no app do aluno), que a matriz de rastreabilidade de
   [`requisitos.md`](./requisitos.md) §14 já dava como entrega da fase mas a

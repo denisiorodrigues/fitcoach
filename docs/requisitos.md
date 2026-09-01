@@ -8,7 +8,8 @@ rastreáveis. Complementa:
 - [`regras-de-negocio.md`](./regras-de-negocio.md) — detalhe de cada campo e regra;
 - [`gamificacao.md`](./gamificacao.md) — design da gamificação do aluno (módulo RF-GAM);
 - [`architecture.md`](./architecture.md) — decisões técnicas;
-- [`manual-do-usuario.md`](./manual-do-usuario.md) — como cada tela funciona hoje.
+- [`manual-do-usuario.md`](./manual-do-usuario.md) — como cada tela funciona hoje;
+- [`github-project.md`](./github-project.md) — como isto vira Project, milestones e issues no GitHub.
 
 **Escrito em 27 ago 2026**, derivado dos documentos acima (levantados direto do
 código em 20–25 ago 2026). Onde um requisito ainda não existe no código, o status
@@ -124,7 +125,7 @@ Estrutura: Plano → Dias (`WorkoutDay`) → Exercícios do dia (`PlanExercise`)
 | RF-PLN-4 | `studentId` do plano precisa pertencer ao treinador autenticado, senão `400` | Must | ✅ | — | §7 |
 | RF-PLN-5 | Editar plano depois de criado (`PUT /api/plans/{id}`; DTO `UpdateWorkoutPlanRequest` já existe; o client web já chama esse endpoint) | Must | ⬜ | Fase 1 (item 1) | §7 |
 | RF-PLN-6 | Tela de edição de plano no painel web | Must | ⬜ | Fase 2 (item 4) | manual §8 |
-| RF-PLN-7 | Tela de detalhe do plano (`/plans/{id}`) — hoje salvar um plano leva a uma página inexistente | Should | ⬜ | Fase 2 | manual §2 |
+| RF-PLN-7 | Tela de detalhe do plano (`/plans/{id}`) — hoje salvar um plano leva a uma página inexistente | Should | ⬜ | Fase 2 (item 11) | manual §2 |
 | RF-PLN-8 | Restrições de tamanho de campo (name ≤150, description ≤500, label do dia ≤60, notes ≤200, reps ≤20, coachNotes ≤300) | Should | 🟡 (parcial, via `MaxLength` do EF) | Fase 1 (item 9) | §7, §10 |
 | RF-PLN-9 | Definir se um plano com lista de `days` vazia é permitido ou vira `400` | Could | ⬜ | decisão aberta | §7, §11 |
 
@@ -361,6 +362,9 @@ Viram requisitos concretos assim que a decisão for tomada.
 
 ## Changelog
 
+- **1 set 2026**: `RF-PLN-7` ganha referência ao item numerado do roadmap (Fase 2,
+  item 11, criado agora em [`roadmap.md`](./roadmap.md)) — faltava desde que o
+  requisito foi escrito; achado montando o plano do GitHub Project.
 - **31 ago 2026**: varredura de consistência do módulo RF-AVA — corrigida a
   referência quebrada na abertura de §9 (apontava pra "decisão #14", que depois
   da renumeração passou a ser outro assunto); alinhada a redação sobre

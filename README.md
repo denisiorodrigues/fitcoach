@@ -13,6 +13,7 @@ Plataforma completa inspirada no App Treino (apptreino.com.br) para academias e 
 | [`docs/regras-de-negocio.md`](docs/regras-de-negocio.md) | Dicionário de campos, obrigatoriedades e regras de autorização |
 | [`docs/architecture.md`](docs/architecture.md) | Visão técnica e decisões de arquitetura |
 | [`docs/manual-do-usuario.md`](docs/manual-do-usuario.md) | Como usar cada tela |
+| [`docs/github-project.md`](docs/github-project.md) | Como o roadmap vira Project, milestones e issues no GitHub |
 
 ## Arquitetura
 
