@@ -18,10 +18,11 @@ Plataforma completa inspirada no App Treino (apptreino.com.br) para academias e 
 
 ```
 FitCoach/
-├── FitCoach.API/          → Backend .NET 10 + PostgreSQL
-├── FitCoach.Web/          → Painel Web (Next.js 14) — Professor
-├── FitCoach.Android/      → App Android (Kotlin) — Aluno     [Fase 2]
-└── FitCoach.WearOS/       → App Wear OS (Kotlin) — Relógio   [Fase 2]
+├── apps/
+│   ├── backend/           → API .NET 10 + PostgreSQL
+│   ├── web/               → Painel Web (Next.js 14) — Treinador
+│   └── mobile/            → App do aluno (React Native)        [Fase 3]
+└── packages/              → Código compartilhado (watch-shared/KMP) [Fase 4]
 ```
 
 ## Stack
@@ -32,9 +33,10 @@ FitCoach/
 | Banco | PostgreSQL 16                                           |
 | Auth | JWT Bearer + BCrypt                                     |
 | Web | Next.js 14 · TypeScript · Tailwind CSS · TanStack Query |
-| Android | Kotlin · Jetpack Compose · Retrofit                     |
-| Wear OS | Kotlin · Wear Compose · Health Services API             |
-| Cloud | AWS (S3 para mídia) / Azure App Service                 |
+| Phone (aluno) | React Native                                      |
+| Watch — lógica | Kotlin Multiplatform (módulo `watch-shared`)     |
+| Watch — UI | SwiftUI (watchOS) · Jetpack Compose (Wear OS)         |
+| Hospedagem | VPS Hostinger no início; migração pra nuvem de mercado (AWS/Azure/GCP) depois — ver `docs/roadmap.md` |
 
 ## Início Rápido (Docker)
 
@@ -111,7 +113,7 @@ NEXT_PUBLIC_API_URL=https://api.seudominio.com/api
 | GET | /api/plans/{id} | Detalhes do plano |
 | GET/POST | /api/exercises | Biblioteca de exercícios |
 
-### Student (App Android/Web)
+### Student (app do aluno)
 | Método | Rota | Descrição |
 |--------|------|-----------|
 | GET | /api/dashboard | Treino do dia + histórico |
@@ -120,23 +122,32 @@ NEXT_PUBLIC_API_URL=https://api.seudominio.com/api
 | POST | /api/sessions/{id}/finish | Finalizar treino |
 | GET | /api/sessions/{id} | Detalhes da sessão |
 
-## Deploy na AWS
+## Deploy
 
-```bash
-# 1. RDS PostgreSQL (recomendado: db.t4g.micro para começar)
-# 2. Elastic Beanstalk ou ECS para a API .NET
-# 3. Amplify ou S3 + CloudFront para o Next.js
-# 4. S3 + CloudFront para mídia (vídeos/imagens dos exercícios)
+**Decidido em 31 ago 2026**: o projeto começa hospedado numa **VPS da Hostinger**
+(restrição de orçamento), com migração planejada pra uma nuvem de mercado (AWS,
+Azure ou GCP) depois. Vale tanto pra API/banco quanto pro armazenamento de mídia
+(fotos e vídeos da avaliação física).
 
-# Configurar SSL com ACM (AWS Certificate Manager) — gratuito
-```
+O desenho de infra ainda não está fechado — banco gerenciado ou na própria VPS,
+forma de armazenar mídia, limites de arquivo e o desenho da migração estão
+listados em `docs/architecture.md` §7 e em `docs/roadmap.md` ("Fora de fase").
+
+Esboço antigo de deploy 100% AWS (RDS + Elastic Beanstalk/ECS + Amplify/S3 +
+CloudFront + ACM) fica registrado como referência pra fase de migração, não como
+o plano atual.
 
 ## Próximas Fases
 
-- **Fase 2**: App Android (Kotlin) + App Wear OS — execução do treino com timer, FC, Wearable Sync
-- **Fase 3**: Avaliação física com fotos, gráficos de evolução
-- **Fase 4**: Notificações push (Firebase), lembretes de treino
-- **Fase 5**: Assinatura digital, pagamentos (Stripe/Pagar.me), multi-academia
+Resumo — o detalhamento por fase, com critérios de "pronto", está em
+`docs/roadmap.md`.
+
+- **Fase 1** — Backend (API .NET): fechar gaps funcionais, CI/CD e itens de segurança
+- **Fase 2** — Painel web do treinador (Next.js): login, alunos, edição de plano
+- **Fase 3** — App do aluno (React Native): treino do dia, execução, histórico
+- **Fase 4** — Relógio (watchOS + Wear OS via módulo KMP)
+- **Backlog** — Avaliação física (anamnese, medidas, fotos/vídeos), gamificação,
+  notificações push, pagamentos e multi-academia
 
 
 ## Ajuda

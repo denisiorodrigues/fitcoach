@@ -83,9 +83,11 @@ usa** — hoje não há nenhuma forma de editar o perfil complementar de um alun
 depois do cadastro (preencher peso/altura/objetivo, por exemplo). Sugiro somar
 isso à Fase 1 do roadmap.
 
-`healthNotes` é texto livre pra observações rápidas do treinador — não confundir
-com a anamnese estruturada planejada em §12, que é um dado à parte (por
-avaliação, não por perfil) e não substitui esse campo.
+`healthNotes` é texto livre pra observações rápidas do treinador. Os dois
+convivem com a anamnese estruturada planejada em §12, sem sobreposição de função:
+a anamnese é dado à parte, gravado **por avaliação** e não por perfil. O que muda
+quando o §12 existir é o uso — o `healthNotes` deixa de ser o lugar onde se
+registra anamnese, mas o campo continua.
 
 ---
 
@@ -228,7 +230,14 @@ entra no roadmap.
 ⚠️ Nada disto existe no código hoje — nenhuma entidade, endpoint ou tela. Épico
 escopado com o dono do produto em 31 ago 2026; requisitos numerados e decisões
 em [`requisitos.md`](./requisitos.md) §9 (RF-AVA), detalhamento de backlog em
-[`roadmap.md`](./roadmap.md). Resumo dos campos planejados:
+[`roadmap.md`](./roadmap.md).
+
+**Convenção de rotas**: coleção sob o aluno (`/api/students/{id}/evaluations`),
+item e subrecursos na raiz (`/api/evaluations/{id}`,
+`/api/evaluations/{id}/feedback`). O aluno lê as próprias avaliações por
+`GET /api/evaluations/me` — a rota sob o aluno é restrita ao treinador.
+
+Resumo dos campos planejados:
 
 **Avaliação (`PhysicalEvaluation`)** — um registro datado por vez, vinculado ao
 aluno e ao treinador que aplicou; um aluno pode ter várias ao longo do tempo.
@@ -241,8 +250,9 @@ tratamento do §6, exercícios) — apagar quebraria o histórico de evolução.
 | `studentId` / `trainerId` | Sim | mesma regra de autorização do resto do sistema (§9) — só o treinador dono do aluno acessa |
 | `weightKg` / `heightCm` | Sim | peso/altura **na data desta avaliação** — não é o mesmo campo do §4 (`StudentProfile.WeightKg`/`HeightCm`, que é um snapshot único e mutável); ao salvar a avaliação, esse snapshot também é atualizado com os valores mais recentes |
 
-**Anamnese estruturada** — não substitui o `healthNotes` livre do §4 (ver nota
-lá); é um dado à parte, por avaliação.
+**Anamnese estruturada** — dado à parte, gravado por avaliação; convive com o
+`healthNotes` livre do §4 (ver nota lá), que continua existindo pra observação
+rápida do treinador.
 
 | Campo | Obrigatório? | Regra planejada |
 |---|---|---|
@@ -293,10 +303,19 @@ aberto de propósito, a definir conforme o plano de VPS contratado (ver §11).
 na tela de histórico/evolução do aluno (junto com a própria avaliação). Estrutura
 do feedback (só texto ou também nota estruturada?): ❓ ver §11.
 
+**O que o aluno enxerga** — no app (Fase 3), o histórico das próprias avaliações:
+anamnese, medidas, evolução ao longo do tempo e as fotos/vídeos que o treinador
+enviou (são mídias do corpo dele, que ele já consentiu em armazenar). Avaliação
+de outro aluno → `404`, como no resto do sistema (§9).
+
 ---
 
 ## Changelog
 
+- **31 ago 2026**: varredura de consistência — alinhada a redação sobre
+  `healthNotes` no §4 e §12 (as duas versões se contradiziam na leitura rápida);
+  §12 ganha a convenção de rotas do módulo e a descrição do que o aluno enxerga
+  (incluindo as fotos/vídeos que o treinador enviou).
 - **31 ago 2026**: revisão de gaps do §12 (RF-AVA), a pedido do dono do
   produto — `PhysicalEvaluation` passa a capturar peso/altura por avaliação
   (com sync pro snapshot do §4) e pode ser editada (exclusão fica fora de

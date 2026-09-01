@@ -32,6 +32,8 @@ fechando, as seções 🔜 viram passo a passo real.
 | Cadastrar aluno diretamente | Treinador | 🔜 |
 | Convidar aluno (autocadastro) | Treinador cria, Aluno usa | 🔜 |
 | Biblioteca de exercícios (tela própria) | Treinador | 🔜 |
+| Avaliação física (anamnese, medidas, fotos/vídeos, feedback do aluno) | Treinador registra, Aluno consulta | 🔜 backlog — ver `requisitos.md` §9 (RF-AVA) |
+| Gamificação (sequência, conquistas, ranking) | Aluno | 🔜 backlog — ver [`gamificacao.md`](./gamificacao.md) |
 | App do aluno (celular) | Aluno | 🔜 Fase 3 do roadmap |
 | Relógio (watchOS / Wear OS) | Aluno | 🔜 Fase 4 do roadmap |
 
@@ -185,5 +187,9 @@ decisão de escopo for tomada.
 
 ## Changelog
 
+- **31 ago 2026**: a "Visão rápida" ganha duas linhas que faltavam — avaliação
+  física (RF-AVA, escopada em 31 ago) e gamificação (escopada em 27 ago). As
+  duas entram como 🔜, no mesmo padrão das demais funcionalidades planejadas;
+  nenhuma tela nova existe. Passo a passo de uso só quando forem implementadas.
 - **25 ago 2026**: criação, cobrindo o estado real do sistema (2 telas web
   funcionais) e o restante planejado do `roadmap.md`.

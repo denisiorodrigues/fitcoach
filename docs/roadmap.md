@@ -106,6 +106,7 @@ portar pro app:
 | 4 | Histórico de sessões / detalhe de sessão | Fase 1 (`/sessions/{id}`) |
 | 5 | Perfil do aluno (dados cadastrados pelo trainer — leitura) | Fase 1 (Students) |
 | 6 | Tela de progresso: sequência (streak), dias treinados, conquistas e ranking | Backlog "Gamificação do aluno" (fatia de backend) + design em [`gamificacao.md`](./gamificacao.md) |
+| 7 | Avaliação física: histórico das próprias avaliações (anamnese, medidas, evolução, fotos/vídeos) e envio de feedback sobre a avaliação recebida | Backlog "Avaliação física do aluno" (fatia de backend) + requisitos em [`requisitos.md`](./requisitos.md) §9 (RF-AVA-8, AVA-9, AVA-15) |
 
 **Primeiro acesso resolvido (25 ago 2026)**: o app não precisa de tela própria de
 cadastro — o aluno se cadastra pelo link de convite (Fase 2, item 8), que roda no
@@ -115,8 +116,11 @@ passa a redirecionar pra loja do app em vez de cair no fallback `/login`.
 
 ### Decisões em aberto antes de começar
 
-- Dados sensíveis (`healthNotes`, FC, calorias): aplicar cache local com
-  expiração, nunca logar, tráfego sempre em TLS (já apontado no `architecture.md §6`).
+- Dados sensíveis (`healthNotes`, FC, calorias e — quando o módulo de avaliação
+  física existir — anamnese, medidas e fotos/vídeos do corpo): aplicar cache
+  local com expiração, nunca logar, tráfego sempre em TLS (já apontado no
+  `architecture.md §6`; requisito em `requisitos.md` RNF-SEG-6). As fotos/vídeos
+  ainda exigem consentimento explícito do aluno (RNF-LEG-4).
 
 ---
 
@@ -192,6 +196,12 @@ entregue nas Fases 1–4. Por ora, só os buckets herdados do README:
 
 ## Changelog deste documento
 
+- **31 ago 2026**: varredura de consistência — Fase 3 ganha o item 7 (avaliação
+  física no app do aluno), que a matriz de rastreabilidade de
+  [`requisitos.md`](./requisitos.md) §14 já dava como entrega da fase mas a
+  tabela daqui não listava; "Decisões em aberto" da Fase 3 atualizada pra citar
+  anamnese, medidas e fotos/vídeos entre os dados sensíveis (acompanhando o
+  RNF-SEG-6 estendido).
 - **31 ago 2026**: adicionada ao backlog futuro (sem prazo) da Avaliação física
   a captura facilitada de bioimpedância — foto da balança + OCR e/ou API de
   fabricante, pra substituir a digitação manual do MVP. Detalhe em
