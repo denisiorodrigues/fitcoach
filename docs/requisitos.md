@@ -177,17 +177,26 @@ inteiro é posterior à Fase 2.
 
 ## 9. RF — AVA (avaliação física e anamnese do aluno)
 
-Épico novo, escopado com o dono do produto em 31 ago 2026 — resolve a decisão #14
-que estava aberta em §13 ("Avaliação física / anamnese... entra no produto ou fica
-fora de escopo?"): **entra**. Motivação: table stake para consultoria online
+Épico novo, escopado com o dono do produto em 31 ago 2026 — resolve a decisão
+"Avaliação física / anamnese entra no produto ou fica fora de escopo?", que
+estava aberta em §13 (removida de lá por ter sido resolvida): **entra**.
+Motivação: table stake para consultoria online
 ([`plano-de-negocio.md`](./plano-de-negocio.md) §5.5). Cobre anamnese + três
 frentes de medida corporal (bioimpedância, dobras cutâneas/adipômetro,
 circunferências/fita métrica) + histórico de avaliações do aluno + fotos/vídeos
 de acompanhamento enviados pelo treinador + feedback do aluno sobre a avaliação
-recebida. A anamnese estruturada aqui **substitui** o uso
-do campo livre `healthNotes` de RF-ALU-1 como anamnese informal — `healthNotes`
-continua existindo para observações rápidas do treinador, sem sobreposição de
-função.
+recebida.
+
+**Relação com o `healthNotes` (RF-ALU-1)**: os dois convivem, sem sobreposição de
+função — `healthNotes` continua sendo o campo livre de observação rápida do
+treinador no perfil do aluno; a anamnese estruturada aqui é dado à parte, gravado
+por avaliação e não por perfil. O que muda é o uso: com RF-AVA-2 disponível, o
+`healthNotes` deixa de ser o lugar onde se registra anamnese.
+
+**Convenção de rotas do módulo**: coleção sob o aluno
+(`/api/students/{id}/evaluations`), item e subrecursos na raiz
+(`/api/evaluations/{id}`, `/api/evaluations/{id}/feedback`) — vale para todos os
+requisitos abaixo.
 
 Como GAM (§8), precisa de fatia própria de backend (entidade, endpoints, testes) +
 tela de registro no painel web do treinador (quem aplica a avaliação), a agendar
@@ -203,13 +212,14 @@ no backlog; a visualização do histórico e o feedback do aluno aparecem para e
 | RF-AVA-5 | Circunferências (fita métrica), em cm: pescoço, ombro, tórax, cintura, abdômen, quadril, braço (dir./esq., relaxado e contraído), antebraço (dir./esq.), coxa (dir./esq.), panturrilha (dir./esq.) | Must | ⬜ | backlog | módulo novo |
 | RF-AVA-6 | `POST/GET /api/students/{id}/evaluations`: treinador registra e lista as avaliações do próprio aluno; isolamento por dono como os demais módulos (RNF-SEG-2) | Must | ⬜ | backlog | módulo novo |
 | RF-AVA-7 | Tela no painel web do treinador: formulário de registro (anamnese + as 3 frentes de medida), histórico/evolução do aluno (comparação entre avaliações ao longo do tempo, incluindo peso/altura do RF-AVA-1) e exibição do feedback que o aluno deixou em cada avaliação (RF-AVA-9) | Must | ⬜ | backlog | módulo novo |
-| RF-AVA-8 | Aluno visualiza no app o histórico das próprias avaliações (medidas + evolução) | Should | ⬜ | Fase 3 | módulo novo |
+| RF-AVA-8 | Aluno visualiza no app o histórico das próprias avaliações: anamnese, medidas, evolução ao longo do tempo e as fotos/vídeos que o treinador enviou (RF-AVA-10) — são mídias do próprio corpo dele, que ele já consentiu em armazenar (RNF-LEG-4) | Should | ⬜ | Fase 3 | módulo novo |
 | RF-AVA-9 | Aluno registra feedback em texto sobre uma avaliação recebida (`POST /api/evaluations/{id}/feedback`), visível ao treinador | Must | ⬜ | Fase 3 | módulo novo |
 | RF-AVA-10 | Fotos e vídeos de acompanhamento/orientação por avaliação, enviados pelo treinador (fotos já citadas no backlog original do roadmap; vídeo é pedido novo do dono do produto, 31 ago 2026). Armazenamento: VPS Hostinger no início do projeto (restrição de orçamento — decisão de 31 ago 2026), migração para nuvem de mercado (AWS/Azure/GCP) planejada depois. Exige consentimento explícito do aluno antes de armazenar (RNF-LEG-4); limite de tamanho de arquivo e duração de vídeo é decisão técnica em aberto (§13) | Should | ⬜ | backlog | roadmap "Fora de fase" |
 | RF-AVA-11 | Protocolo de dobras cutâneas: 3 ou 7 pontos; sistema calcula % de gordura pela fórmula do protocolo automaticamente, ou só arquiva os valores brutos digitados pelo treinador | Could | ⬜ | decisão aberta | módulo novo |
 | RF-AVA-12 | Estrutura do feedback do aluno (RF-AVA-9): só texto livre, ou também nota/rating estruturado? Editável depois de enviado? | Could | ⬜ | decisão aberta | módulo novo |
 | RF-AVA-13 | Captura facilitada de bioimpedância, pra substituir a digitação manual do RF-AVA-3: (a) foto da tela do aparelho + OCR extraindo os valores automaticamente, e/ou (b) integração via API com o fabricante da balança, se algum disponibilizar uma. **Backlog futuro** — pedido do dono do produto em 31 ago 2026, sem prazo definido | Won't | ⬜ | backlog futuro | módulo novo |
 | RF-AVA-14 | Editar uma avaliação depois de criada (`PUT /api/evaluations/{id}`), mesmo padrão do `RF-PLN-5`; exclusão fica fora de escopo por ora (mesmo tratamento do `RF-EXE-7`) — apagar uma avaliação quebraria o histórico de evolução do RF-AVA-7 | Should | ⬜ | backlog | módulo novo |
+| RF-AVA-15 | Endpoint de leitura do lado do aluno (`GET /api/evaluations/me`), que sustenta o RF-AVA-8 — o RF-AVA-6 é restrito ao treinador. Aluno só enxerga as próprias avaliações; avaliação de outro aluno → `404` (RNF-SEG-2) | Should | ⬜ | backlog | módulo novo |
 
 ---
 
@@ -343,7 +353,7 @@ Viram requisitos concretos assim que a decisão for tomada.
 | **Fase 3 — Mobile (aluno)** | RF-SES-6 a 9 · RF-GAM-14 (superfície) · RF-AVA-8, AVA-9 (superfície) · RNF-SEG-6 · RNF-LEG-1 |
 | **Fase 4 — Watch** | RF-WCH-1 a 5 · RNF-USA-2 · RNF-ARQ-2 (conclusão) |
 | **Backlog — Gamificação** (design em `gamificacao.md`) | RF-GAM-1 a 13 · RNF-DES-5 · RNF-LEG-3 |
-| **Backlog — Avaliação física** (design em §9) | RF-AVA-1 a 7, AVA-10, AVA-14 · AVA-13 (backlog futuro, sem prazo) · RNF-LEG-4 |
+| **Backlog — Avaliação física** (design em §9) | RF-AVA-1 a 7, AVA-10, AVA-14, AVA-15 · AVA-13 (backlog futuro, sem prazo) · RNF-LEG-4 |
 | **Backlog — outros** | RF-EXE-7 · RF-FIN-1 a 4 |
 | **Decisão de PO pendente** | RF-AUTH-8 · RF-TRN-7 · RF-PLN-9 · RF-GAM-5, GAM-10 · RF-AVA-11, AVA-12 · RNF-LEG-2 (ver §13) |
 
@@ -351,6 +361,14 @@ Viram requisitos concretos assim que a decisão for tomada.
 
 ## Changelog
 
+- **31 ago 2026**: varredura de consistência do módulo RF-AVA — corrigida a
+  referência quebrada na abertura de §9 (apontava pra "decisão #14", que depois
+  da renumeração passou a ser outro assunto); alinhada a redação sobre
+  `healthNotes`, que se contradizia com `regras-de-negocio.md` §4; declarada a
+  convenção de rotas do módulo (coleção sob o aluno, item na raiz); `RF-AVA-8`
+  passa a incluir fotos/vídeos e anamnese no que o aluno vê; novo `RF-AVA-15`
+  (`GET /api/evaluations/me`), que faltava pra sustentar o RF-AVA-8 — o
+  RF-AVA-6 é restrito ao treinador.
 - **31 ago 2026**: corrigida numeração de subseções — `### 11.N` de RNF virou
   `### 12.N`, acompanhando o `## 12` do título (ficou desalinhado na
   renumeração anterior).
@@ -389,10 +407,12 @@ Viram requisitos concretos assim que a decisão for tomada.
 - **31 ago 2026**: `RF-AVA-10` estendido para incluir **vídeos** de
   acompanhamento/orientação (antes só fotos) — pedido do dono do produto.
   Prioridade sobe de `Could` para `Should` e sai de "decisão aberta" pra
-  `backlog` (o que resta em aberto é só onde armazenar o arquivo, decisão #15
-  de §13, que não bloqueia mais o escopo do requisito).
+  `backlog` (o que resta em aberto é só onde armazenar o arquivo — decisão que
+  na época era a #15 de §13, hoje renumerada, e que não bloqueia mais o escopo
+  do requisito).
 - **31 ago 2026**: adicionado o módulo **RF-AVA** (avaliação física e anamnese do
-  aluno), resolvendo a decisão #14 que estava aberta em §13 desde 29 ago — escopo
+  aluno), resolvendo a decisão sobre avaliação física/anamnese que estava aberta
+  em §13 desde 29 ago (era a #14 na numeração da época) — escopo
   definido com o dono do produto: anamnese estruturada + três frentes de medida
   corporal (bioimpedância, dobras cutâneas/adipômetro, circunferências/fita
   métrica), histórico de avaliações e feedback do aluno sobre a avaliação
