@@ -205,3 +205,14 @@ Das decisões de arquitetura mobile (a confirmar antes de começar a implementa�
 - Definir formato de persistência local do módulo `watch-shared` (arquivo,
   SQLite via KMP, etc.).
 - Ajustar CORS para domínio real antes de publicar o painel web.
+
+Hospedagem/infraestrutura de produção (decisão de 31 ago 2026, `roadmap.md`
+"Fora de fase"): começa em **VPS da Hostinger** (restrição de orçamento), com
+migração planejada para nuvem de mercado (AWS, Azure ou GCP) depois — vale tanto
+para a API/banco quanto para o armazenamento de fotos/vídeos de avaliação física
+(`requisitos.md` §9, RF-AVA-10). Diverge do esboço de deploy 100% AWS que hoje
+está no README; ainda a definir: banco gerenciado ou na própria VPS, forma de
+armazenar mídia na Hostinger (disco local vs. object storage), o limite de
+tamanho/duração de arquivo pra fotos/vídeos (`requisitos.md` §13, decisão
+técnica em aberto de propósito) e o desenho da migração para a nuvem de
+mercado quando chegar a hora.

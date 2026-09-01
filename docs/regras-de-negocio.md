@@ -83,6 +83,10 @@ usa** — hoje não há nenhuma forma de editar o perfil complementar de um alun
 depois do cadastro (preencher peso/altura/objetivo, por exemplo). Sugiro somar
 isso à Fase 1 do roadmap.
 
+`healthNotes` é texto livre pra observações rápidas do treinador — não confundir
+com a anamnese estruturada planejada em §12, que é um dado à parte (por
+avaliação, não por perfil) e não substitui esse campo.
+
 ---
 
 ## 5. Login — `POST /api/auth/login`
@@ -208,10 +212,103 @@ entra no roadmap.
   de e-mail deve ser validado no backend.
 - ❓ **Plano sem nenhum dia**: deveria ser permitido criar um plano com `days`
   vazio, ou isso devia virar erro (`400`)?
+- ❓ **Dobras cutâneas (§12)**: protocolo de 3 ou 7 pontos? O sistema calcula %
+  de gordura pela fórmula do protocolo automaticamente, ou só arquiva os valores
+  brutos digitados pelo treinador?
+- ❓ **Feedback do aluno na avaliação física (§12)**: só texto livre, ou também
+  nota/rating estruturado? É editável depois de enviado?
+- ❓ **Limite de fotos/vídeos da avaliação física (§12)**: tamanho máximo de
+  arquivo e duração máxima de vídeo — deixado em aberto de propósito em 31 ago
+  2026, a definir conforme o plano de VPS contratado.
+
+---
+
+## 12. Avaliação física e anamnese do aluno (RF-AVA) — planejado, ainda não implementado
+
+⚠️ Nada disto existe no código hoje — nenhuma entidade, endpoint ou tela. Épico
+escopado com o dono do produto em 31 ago 2026; requisitos numerados e decisões
+em [`requisitos.md`](./requisitos.md) §9 (RF-AVA), detalhamento de backlog em
+[`roadmap.md`](./roadmap.md). Resumo dos campos planejados:
+
+**Avaliação (`PhysicalEvaluation`)** — um registro datado por vez, vinculado ao
+aluno e ao treinador que aplicou; um aluno pode ter várias ao longo do tempo.
+Pode ser editada depois de criada; **exclusão fica fora de escopo** (mesmo
+tratamento do §6, exercícios) — apagar quebraria o histórico de evolução.
+
+| Campo | Obrigatório? | Regra planejada |
+|---|---|---|
+| `evaluatedAt` | Sim | data da avaliação |
+| `studentId` / `trainerId` | Sim | mesma regra de autorização do resto do sistema (§9) — só o treinador dono do aluno acessa |
+| `weightKg` / `heightCm` | Sim | peso/altura **na data desta avaliação** — não é o mesmo campo do §4 (`StudentProfile.WeightKg`/`HeightCm`, que é um snapshot único e mutável); ao salvar a avaliação, esse snapshot também é atualizado com os valores mais recentes |
+
+**Anamnese estruturada** — não substitui o `healthNotes` livre do §4 (ver nota
+lá); é um dado à parte, por avaliação.
+
+| Campo | Obrigatório? | Regra planejada |
+|---|---|---|
+| Histórico de saúde | Não | texto livre |
+| Lesões/cirurgias prévias | Não | texto livre |
+| Doenças pré-existentes | Não | texto livre |
+| Medicamentos em uso | Não | texto livre |
+| Nível de atividade física atual | Não | texto livre |
+| Restrições | Não | texto livre |
+
+**Bioimpedância** — preenchida manualmente pelo treinador a partir da leitura do
+aparelho; sem integração direta com hardware no MVP (captura facilitada por
+foto+OCR ou API do fabricante é backlog futuro, sem prazo — RF-AVA-13).
+
+| Campo | Unidade |
+|---|---|
+| % de gordura corporal | % |
+| Massa gorda | kg |
+| Massa magra | kg |
+| Massa muscular | kg |
+| Massa óssea | kg |
+| Água corporal total | % |
+| Água intracelular / extracelular (ICW/ECW) | % |
+| Massa de proteína | kg |
+| Taxa metabólica basal (TMB) | kcal |
+| Idade metabólica | anos |
+| Gordura visceral | índice/nível |
+| Análise segmentar (gordura e massa magra por braço/tronco/perna) | — |
+| Pontuação/score do aparelho | campo livre, opcional — proprietário de cada marca |
+
+**Dobras cutâneas (adipômetro)** — em mm, protocolo Pollock 7 dobras: tricipital,
+subescapular, axilar média, suprailíaca, abdominal, coxa, peitoral. Protocolo
+(3 ou 7 pontos) e cálculo automático de % de gordura: ❓ ver §11.
+
+**Circunferências (fita métrica)** — em cm: pescoço, ombro, tórax, cintura,
+abdômen, quadril, braço (dir./esq., relaxado e contraído), antebraço (dir./esq.),
+coxa (dir./esq.), panturrilha (dir./esq.).
+
+**Fotos e vídeos de acompanhamento/orientação** — enviados pelo treinador.
+Armazenamento: VPS da Hostinger no início do projeto (restrição de orçamento),
+migração pra nuvem de mercado (AWS/Azure/GCP) planejada depois
+(`architecture.md` §7). Exige **consentimento explícito do aluno** antes de
+armazenar — dado de imagem do corpo, mais sensível que a anamnese/medidas.
+Limite de tamanho de arquivo e duração de vídeo: ❓ decisão técnica deixada em
+aberto de propósito, a definir conforme o plano de VPS contratado (ver §11).
+
+**Feedback do aluno** — texto sobre a avaliação recebida, visível ao treinador
+na tela de histórico/evolução do aluno (junto com a própria avaliação). Estrutura
+do feedback (só texto ou também nota estruturada?): ❓ ver §11.
 
 ---
 
 ## Changelog
 
+- **31 ago 2026**: revisão de gaps do §12 (RF-AVA), a pedido do dono do
+  produto — `PhysicalEvaluation` passa a capturar peso/altura por avaliação
+  (com sync pro snapshot do §4) e pode ser editada (exclusão fica fora de
+  escopo); feedback do aluno passa a aparecer explicitamente na tela do
+  treinador; fotos/vídeos exigem consentimento explícito do aluno; nova
+  pergunta em aberto no §11 sobre limite de tamanho/duração de arquivo.
+- **31 ago 2026**: adicionada a seção **12 — Avaliação física e anamnese do
+  aluno (RF-AVA)**, planejado, ainda não implementado: anamnese estruturada,
+  bioimpedância (13 campos), dobras cutâneas, circunferências, fotos/vídeos de
+  acompanhamento e feedback do aluno. Duas novas perguntas em aberto no §11
+  (protocolo de dobras, estrutura do feedback). Nota adicionada ao §4
+  distinguindo `healthNotes` (observação livre) da anamnese estruturada (§12).
+  Espelha [`requisitos.md`](./requisitos.md) §9 (RF-AVA).
 - **25 ago 2026**: criação, levantado direto do código (Models, DTOs, Services,
   Controllers) do branch `chore/monorepo-restructure`.
