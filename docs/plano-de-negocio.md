@@ -88,6 +88,19 @@ passa a ser.
 | Biblioteca de exercícios com filtro por músculo/equipamento + exercício próprio | 🟡 API pronta; tela própria na Fase 2 |
 | Convite de aluno por link (autocadastro) | ⬜ Fase 1 (backend) + Fase 2 (tela) |
 | Edição de plano depois de criado | ⬜ Fase 1 (`PUT /api/plans/{id}`) + Fase 2 |
+| Avaliação física do aluno: anamnese estruturada, medidas (bioimpedância, dobras cutâneas/adipômetro, circunferências/fita métrica), fotos e vídeos de acompanhamento/orientação, histórico de evolução e feedback do aluno | ⬜ backlog (RF-AVA, `requisitos.md` §9) |
+
+**Sobre a avaliação física (RF-AVA) — o que ela realmente vale pro treinador**: é
+valor real, não decorativo — viabiliza vender **consultoria online completa**
+(não só plano de treino), dá credibilidade profissional na anamnese/medidas, e
+sustenta cobrar mais do que o preço de entrada de planilha (§7). Mas a pesquisa de
+concorrência (§5.3, item 2) mostra que App Treino, MFit e Tecnofit **já** entregam
+avaliação física/composição corporal — então esse item **fecha um gap de table
+stake** (§5.5), não abre vantagem competitiva sobre eles. O eixo em que o
+FitCoach de fato se diferencia continua sendo a **adesão do aluno** (§5.4:
+gamificação + adesão acionável + Wear OS) — RF-AVA é pré-requisito pra vender pro
+segmento de consultoria online, não o motivo do treinador escolher o FitCoach em
+vez do concorrente.
 
 ### 3.2 Para o aluno
 | Entrega | Estado |
@@ -221,12 +234,14 @@ Table stakes que **todos** os concorrentes têm e o FitCoach não:
 | Lacuna | Peso na decisão do treinador | Situação |
 |---|---|---|
 | Vídeo demonstrativo do exercício | Alto — o aluno não sabe executar por texto | ⬜ não escopado |
-| Avaliação física / anamnese | Alto para consultoria online | ⬜ não escopado |
+| Avaliação física / anamnese | Alto para consultoria online | 🟡 escopado (RF-AVA, `requisitos.md` §9), não implementado |
 | Receber pagamento do aluno pelo app | Alto para o autônomo | ⬜ backlog |
 
 Sem pelo menos o vídeo, a troca dificilmente acontece — a diferenciação da §5.4
 não compensa a ausência do básico. **Decisão pendente**: escopar vídeo de
-exercício (link de YouTube por exercício já resolveria a v1, a custo baixo).
+exercício (link de YouTube por exercício já resolveria a v1, a custo baixo) —
+não confundir com o vídeo de acompanhamento/orientação da avaliação física
+(RF-AVA-10, §3.1), que é outro requisito, já escopado.
 
 **Concorrente real do autônomo iniciante**: a planilha + WhatsApp. O produto
 precisa ser mais rápido de usar que montar uma planilha, ou a troca não acontece.
@@ -331,9 +346,10 @@ analytics ou do módulo de gamificação, ainda não construídos.
 | **Sem CI/CD hoje** (`roadmap.md` Fase 1 item 4) | Regressão silenciosa ao crescer | Item obrigatório para fechar a Fase 1: `dotnet test` a cada PR |
 | **Troca da planilha não acontece** se o produto não for mais rápido que montar planilha | Adoção baixa | Medir "tempo até o primeiro plano criado"; investir em UX da criação de plano |
 | **Concorrente direto barato** (MFit a R$ 10,90–39,90/mês) domina o autônomo | Competitivo / teto de preço | Não competir em biblioteca de vídeo e cobrança; disputar o eixo de adesão do aluno (§5.4) |
-| **Falta de table stakes** — sem vídeo de exercício, avaliação física nem cobrança, que todos os concorrentes têm (§5.5) | Adoção travada mesmo com boa diferenciação | Escopar o mínimo viável: link de vídeo por exercício. Decisão pendente |
+| **Falta de table stakes** — vídeo de exercício e cobrança ainda sem decisão/backlog; avaliação física já escopada (RF-AVA) mas não implementada (§5.5) | Adoção travada mesmo com boa diferenciação | Vídeo de exercício: escopar o mínimo viável (link de YouTube). Decisão pendente. Avaliação física: priorizar a fatia de backend do RF-AVA no backlog |
 | **A diferenciação é copiável** — streak e conquistas são baratos de imitar se derem resultado | Vantagem temporária | Usar a janela para acumular dado de adesão e hábito do aluno; o Wear OS (Fase 4) é a barreira mais cara de copiar |
 | **Billing e multi-academia inexistentes** | Sem receita até serem construídos | Escopados no backlog do roadmap; priorizar após a Fase 2 |
+| **Custo de armazenamento de mídia** (fotos/vídeos da avaliação física, RF-AVA-10) cresce com nº de treinadores × alunos × avaliações — a VPS Hostinger inicial tem orçamento limitado (`roadmap.md` "Fora de fase") | Custo de infra sobe antes da receita acompanhar, ou VPS fica sem espaço | Limite de tamanho/duração de arquivo (decisão técnica em aberto, `requisitos.md` §13); monitorar uso de disco; migração pra nuvem de mercado (AWS/Azure/GCP) já é o plano declarado quando a Hostinger não bastar |
 
 ---
 
@@ -353,6 +369,17 @@ Não duplica o `roadmap.md` técnico — só liga cada fase ao marco de negócio
 
 ## Changelog
 
+- **31 ago 2026**: novo risco em §10 — custo de armazenamento de mídia
+  (fotos/vídeos de RF-AVA) crescendo mais rápido que o orçamento da VPS
+  Hostinger inicial; mitigação aponta pro limite de arquivo (decisão técnica
+  em aberto) e pro plano já declarado de migração pra nuvem de mercado.
+- **31 ago 2026**: explicitado em §3.1 o valor da **avaliação física (RF-AVA)**
+  para o treinador — habilita vender consultoria online completa e sustenta
+  preço mais alto, mas fecha um gap de table stake (§5.5) frente a App Treino,
+  MFit e Tecnofit, não é o eixo de diferenciação (que segue sendo §5.4: adesão +
+  gamificação + Wear OS). Envio de fotos/vídeos de acompanhamento pelo treinador
+  entra no escopo do RF-AVA (vídeo é pedido novo do dono do produto). Atualizados
+  o status da lacuna em §5.5 e o risco correspondente em §10.
 - **29 ago 2026**: §5 reescrita com pesquisa real de concorrência (App Treino,
   MFit Personal, Tecnofit, TreinoAI, Mobitrainer, Wiki4Fit, Vedius, NextFit):
   preços, recursos e lacunas. Nova §5.4 com a tese de diferenciação (adesão do

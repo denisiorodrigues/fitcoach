@@ -150,11 +150,18 @@ entregue nas Fases 1–4. Por ora, só os buckets herdados do README:
   escopo definido com o dono do projeto em 31 ago 2026 — cobre anamnese
   estruturada, as três frentes de medida corporal citadas, histórico/evolução do
   aluno e feedback do aluno sobre a avaliação recebida (visível ao treinador).
-  Fotos de acompanhamento seguem no backlog, mas como decisão em aberto (onde
-  armazenar — o projeto ainda não tem upload de arquivo). Precisa de fatia
+  Trainer também pode enviar **fotos e vídeos** de acompanhamento/orientação por
+  avaliação (vídeo é pedido novo, 31 ago 2026). Armazenamento **decidido em 31
+  ago 2026**: VPS da Hostinger no início do projeto (restrição de orçamento),
+  com migração planejada para nuvem de mercado (AWS, Azure ou GCP) depois — ver
+  também "Fora de fase" abaixo. Precisa de fatia
   própria de backend (entidade `PhysicalEvaluation`, endpoints, testes) + tela de
   registro no painel web do treinador, a agendar; a visualização do histórico e o
   feedback do aluno aparecem na **Fase 3** (app do aluno), como a Gamificação.
+  A bioimpedância (RF-AVA-3) entra digitada manualmente pelo treinador no MVP;
+  uma forma mais fácil de capturar isso (foto da balança + OCR, e/ou API de
+  algum fabricante que disponibilize uma) fica em **backlog futuro, sem prazo**
+  — pedido do dono do produto em 31 ago 2026, RF-AVA-13.
   Requisitos numerados em [`requisitos.md`](./requisitos.md) §9 (RF-AVA).
 - **Notificações push** (Firebase) — lembretes de treino.
 - **Monetização / multi-academia** — assinatura digital, pagamentos (Stripe/Pagar.me), suporte a múltiplas academias.
@@ -171,15 +178,32 @@ entregue nas Fases 1–4. Por ora, só os buckets herdados do README:
 
 ## Fora de fase — a decidir onde entra
 
-- ❓ **Deploy/infraestrutura de produção** (RDS, ECS/Elastic Beanstalk ou App
-  Service, Amplify/S3+CloudFront) — o README já tem um esboço de deploy AWS, mas
-  não ficou definido se isso é parte do critério de "pronto" da Fase 1/2 ou uma
-  fase própria de publicação. Sinalizando aqui pra não ficar implícito.
+- 🟡 **Deploy/infraestrutura de produção** — **parcialmente decidido em 31 ago
+  2026**: começa em **VPS da Hostinger** (restrição de orçamento), com migração
+  planejada para nuvem de mercado (AWS, Azure ou GCP) depois — vale tanto pra API
+  quanto pro armazenamento de mídia do RF-AVA (fotos/vídeos de avaliação física).
+  Isso **diverge** do esboço de deploy 100% AWS que hoje está no README —
+  README ainda não foi atualizado pra refletir a fase inicial na Hostinger.
+  Ainda em aberto: se isso é parte do critério de "pronto" da Fase 1/2 ou uma
+  fase própria de publicação, e o desenho de infra específico na Hostinger
+  (banco gerenciado ou na própria VPS, CI/CD de deploy, etc.).
 
 ---
 
 ## Changelog deste documento
 
+- **31 ago 2026**: adicionada ao backlog futuro (sem prazo) da Avaliação física
+  a captura facilitada de bioimpedância — foto da balança + OCR e/ou API de
+  fabricante, pra substituir a digitação manual do MVP. Detalhe em
+  [`requisitos.md`](./requisitos.md) §9, `RF-AVA-13`.
+- **31 ago 2026**: decisão de infraestrutura do dono do projeto — hospedagem
+  começa em **VPS da Hostinger** (restrição de orçamento), com migração
+  planejada para nuvem de mercado (AWS/Azure/GCP) depois. Resolve onde
+  armazenar fotos/vídeos do RF-AVA-10 e atualiza "Fora de fase" (diverge do
+  esboço 100% AWS do README, ainda não atualizado).
+- **31 ago 2026**: **Avaliação física do aluno** ganha envio de fotos **e vídeos**
+  de acompanhamento/orientação pelo treinador (antes só fotos) — pedido do dono do
+  projeto. Detalhe em [`requisitos.md`](./requisitos.md) §9, `RF-AVA-10`.
 - **31 ago 2026**: escopado o item de backlog **Avaliação física do aluno** —
   anamnese + medidas corporais (bioimpedância, dobras cutâneas/adipômetro,
   circunferências/fita métrica), histórico de avaliações e feedback do aluno
