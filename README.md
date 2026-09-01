@@ -1,19 +1,54 @@
 # FitCoach — Sistema de Gestão de Treinos
 
-Plataforma completa inspirada no App Treino (apptreino.com.br) para academias e personal trainers.
+Plataforma para personal trainers prescreverem e acompanharem o treino dos
+alunos — com o foco que falta nas alternativas do mercado: fazer o aluno
+continuar treinando, não só ajudar o treinador a prescrever e cobrar (visão
+completa em [`docs/plano-de-negocio.md`](docs/plano-de-negocio.md)).
+
+**Hoje, o treinador já pode:**
+- Montar o plano de treino por dia da semana (exercícios, séries, reps, carga, descanso), numa única tela;
+- Acompanhar um dashboard de adesão: total de alunos, ativos na semana, treinos prescritos, taxa de adesão;
+- Manter uma biblioteca de exercícios própria, filtrável por músculo/equipamento.
+
+**O aluno** já consegue consultar o treino do dia, registrar cada série
+(peso/reps), fechar a sessão (frequência cardíaca, calorias) e ver os
+recordes pessoais — hoje só via API/Swagger, telas chegam nas próximas fases
+(ver "Próximas Fases" abaixo).
+
+**Em construção**: avaliação física completa (anamnese, bioimpedância,
+dobras cutâneas, circunferências, fotos e vídeos de acompanhamento —
+`docs/requisitos.md` §9), gamificação, app do aluno e relógio.
+
+### Diferencial
+
+A maior parte do mercado brasileiro (App Treino, MFit, Tecnofit...) compete
+em biblioteca de vídeos e avaliação física — um eixo caro onde o FitCoach
+chega por último, então não é onde aposta (pesquisa de concorrência completa
+em `docs/plano-de-negocio.md` §5). A aposta é resolver o que nenhum
+concorrente pesquisado trata como produto: **o aluno abandonar o treino**.
+
+- **Gamificação da constância** — sequência (streak), dias treinados,
+  conquistas e ranking entre os alunos do mesmo treinador (planejado —
+  `docs/gamificacao.md`).
+- **Adesão como produto, não como relatório** — o dashboard já mede a taxa
+  de adesão hoje; falta alertar o treinador sobre quem está em risco de
+  abandono.
+- **Wear OS além do Apple Watch** — nenhum concorrente pesquisado atende
+  relógio Android; ter os dois é hoje o único ponto onde "ter relógio" ainda
+  é vantagem real (Fase 4).
 
 ## Documentação
 
-| Documento | Conteúdo |
-|---|---|
-| [`docs/plano-de-negocio.md`](docs/plano-de-negocio.md) | Visão de produto, personas, concorrência, modelo de receita e riscos |
-| [`docs/requisitos.md`](docs/requisitos.md) | Requisitos funcionais (RF) e não-funcionais (RNF) numerados, com prioridade, status e rastreabilidade |
-| [`docs/gamificacao.md`](docs/gamificacao.md) | Design da gamificação do aluno — streak, dias treinados, conquistas e ranking |
-| [`docs/roadmap.md`](docs/roadmap.md) | Fases de implementação e pendências para fechar cada uma |
-| [`docs/regras-de-negocio.md`](docs/regras-de-negocio.md) | Dicionário de campos, obrigatoriedades e regras de autorização |
-| [`docs/architecture.md`](docs/architecture.md) | Visão técnica e decisões de arquitetura |
-| [`docs/manual-do-usuario.md`](docs/manual-do-usuario.md) | Como usar cada tela |
-| [`docs/github-project.md`](docs/github-project.md) | Como o roadmap vira Project, milestones e issues no GitHub |
+| Documento                                                | Conteúdo                                                                                              |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| [`docs/plano-de-negocio.md`](docs/plano-de-negocio.md)   | Visão de produto, personas, concorrência, modelo de receita e riscos                                  |
+| [`docs/requisitos.md`](docs/requisitos.md)               | Requisitos funcionais (RF) e não-funcionais (RNF) numerados, com prioridade, status e rastreabilidade |
+| [`docs/gamificacao.md`](docs/gamificacao.md)             | Design da gamificação do aluno — streak, dias treinados, conquistas e ranking                         |
+| [`docs/roadmap.md`](docs/roadmap.md)                     | Fases de implementação e pendências para fechar cada uma                                              |
+| [`docs/regras-de-negocio.md`](docs/regras-de-negocio.md) | Dicionário de campos, obrigatoriedades e regras de autorização                                        |
+| [`docs/architecture.md`](docs/architecture.md)           | Visão técnica e decisões de arquitetura                                                               |
+| [`docs/manual-do-usuario.md`](docs/manual-do-usuario.md) | Como usar cada tela                                                                                   |
+| [`docs/github-project.md`](docs/github-project.md)       | Como o roadmap vira Project, milestones e issues no GitHub                                            |
 
 ## Arquitetura
 
@@ -28,16 +63,16 @@ FitCoach/
 
 ## Stack
 
-| Camada | Tecnologia                                              |
-|--------|---------------------------------------------------------|
-| API | .NET 10 · ASP.NET Core · Entity Framework Core          |
-| Banco | PostgreSQL 16                                           |
-| Auth | JWT Bearer + BCrypt                                     |
-| Web | Next.js 14 · TypeScript · Tailwind CSS · TanStack Query |
-| Phone (aluno) | React Native                                      |
-| Watch — lógica | Kotlin Multiplatform (módulo `watch-shared`)     |
-| Watch — UI | SwiftUI (watchOS) · Jetpack Compose (Wear OS)         |
-| Hospedagem | VPS Hostinger no início; migração pra nuvem de mercado (AWS/Azure/GCP) depois — ver `docs/roadmap.md` |
+| Camada         | Tecnologia                                                                                            |
+| -------------- | ----------------------------------------------------------------------------------------------------- |
+| API            | .NET 10 · ASP.NET Core · Entity Framework Core                                                        |
+| Banco          | PostgreSQL 16                                                                                         |
+| Auth           | JWT Bearer + BCrypt                                                                                   |
+| Web            | Next.js 14 · TypeScript · Tailwind CSS · TanStack Query                                               |
+| Phone (aluno)  | React Native                                                                                          |
+| Watch — lógica | Kotlin Multiplatform (módulo `watch-shared`)                                                          |
+| Watch — UI     | SwiftUI (watchOS) · Jetpack Compose (Wear OS)                                                         |
+| Hospedagem     | VPS Hostinger no início; migração pra nuvem de mercado (AWS/Azure/GCP) depois — ver `docs/roadmap.md` |
 
 ## Início Rápido (Docker)
 
@@ -96,32 +131,32 @@ NEXT_PUBLIC_API_URL=https://api.seudominio.com/api
 ## Rotas da API
 
 ### Auth
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| POST | /api/auth/login | Login (trainer ou student) |
-| POST | /api/auth/register/trainer | Cadastrar personal trainer |
-| POST | /api/auth/register/student | Cadastrar aluno (requer JWT de trainer) |
+| Método | Rota                       | Descrição                               |
+| ------ | -------------------------- | --------------------------------------- |
+| POST   | /api/auth/login            | Login (trainer ou student)              |
+| POST   | /api/auth/register/trainer | Cadastrar personal trainer              |
+| POST   | /api/auth/register/student | Cadastrar aluno (requer JWT de trainer) |
 
 ### Trainer
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| GET | /api/trainer/dashboard | Dashboard do professor |
-| GET | /api/students | Listar meus alunos |
-| GET | /api/students/{id} | Detalhes do aluno |
-| GET | /api/students/{id}/activity | Histórico de atividade |
-| GET | /api/plans | Listar meus planos |
-| POST | /api/plans | Criar plano de treino |
-| GET | /api/plans/{id} | Detalhes do plano |
-| GET/POST | /api/exercises | Biblioteca de exercícios |
+| Método   | Rota                        | Descrição                |
+| -------- | --------------------------- | ------------------------ |
+| GET      | /api/trainer/dashboard      | Dashboard do professor   |
+| GET      | /api/students               | Listar meus alunos       |
+| GET      | /api/students/{id}          | Detalhes do aluno        |
+| GET      | /api/students/{id}/activity | Histórico de atividade   |
+| GET      | /api/plans                  | Listar meus planos       |
+| POST     | /api/plans                  | Criar plano de treino    |
+| GET      | /api/plans/{id}             | Detalhes do plano        |
+| GET/POST | /api/exercises              | Biblioteca de exercícios |
 
 ### Student (app do aluno)
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| GET | /api/dashboard | Treino do dia + histórico |
-| POST | /api/sessions/start | Iniciar sessão de treino |
-| POST | /api/sessions/{id}/sets | Registrar série |
-| POST | /api/sessions/{id}/finish | Finalizar treino |
-| GET | /api/sessions/{id} | Detalhes da sessão |
+| Método | Rota                      | Descrição                 |
+| ------ | ------------------------- | ------------------------- |
+| GET    | /api/dashboard            | Treino do dia + histórico |
+| POST   | /api/sessions/start       | Iniciar sessão de treino  |
+| POST   | /api/sessions/{id}/sets   | Registrar série           |
+| POST   | /api/sessions/{id}/finish | Finalizar treino          |
+| GET    | /api/sessions/{id}        | Detalhes da sessão        |
 
 ## Deploy
 
